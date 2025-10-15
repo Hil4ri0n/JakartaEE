@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="Car Rental Server">
+    <featureManager>
+        <feature>servlet-6.0</feature>
+        <feature>jsonb-3.0</feature>
+    </featureManager>
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  httpPort="9080"
+                  httpsPort="9443" />
+
+    <webApplication location="car-rental-1.0-SNAPSHOT.war" contextRoot="/car-rental"/>
+</server>

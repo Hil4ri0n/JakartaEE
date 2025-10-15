@@ -1,0 +1,25 @@
+### Get all users
+GET http://localhost:9080/car-rental/users
+Accept: application/json
+
+### Get 1 user
+GET http://localhost:9080/car-rental/users/490f1c8f-187e-4c9a-b6b7-5b769cea4bfd
+Accept: application/json
+
+### Post users avatar
+POST http://localhost:9080/car-rental/api/avatars/490f1c8f-187e-4c9a-b6b7-5b769cea4bfd
+Content-Type: multipart/form-data; boundary=WebAppForm
+
+--WebAppForm
+Content-Disposition: form-data; name="file"; filename="avatar.png"
+Content-Type: image/png
+
+< ./avatar.png
+--WebAppForm--
+
+### Get users avatar
+GET http://localhost:9080/car-rental/api/avatars/490f1c8f-187e-4c9a-b6b7-5b769cea4bfd
+Accept: image/png
+
+### Delete users avatar
+DELETE http://localhost:9080/car-rental/api/avatars/490f1c8f-187e-4c9a-b6b7-5b769cea4bfd
