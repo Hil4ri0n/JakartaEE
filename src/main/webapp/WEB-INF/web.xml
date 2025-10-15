@@ -5,6 +5,6 @@
          version="6.0">
     <context-param>
         <param-name>avatarDir</param-name>
-        <param-value>${catalina.base}/webapps/carrental-servlets/img</param-value>
+        <param-value>avatars</param-value>
     </context-param>
 </web-app>

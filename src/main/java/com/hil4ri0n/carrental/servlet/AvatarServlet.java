@@ -23,7 +23,8 @@ public class AvatarServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        avatarDir = Paths.get(getServletContext().getInitParameter("avatarDir"));
+        avatarDir = Paths.get(getServletContext().getRealPath("/"),
+                getServletContext().getInitParameter("avatarDir"));
         try {
             Files.createDirectories(avatarDir);
         } catch (IOException e) {

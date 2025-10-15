@@ -1,6 +1,7 @@
 package com.hil4ri0n.carrental.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hil4ri0n.carrental.model.User;
 import com.hil4ri0n.carrental.service.UserService;
 import jakarta.servlet.ServletException;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @WebServlet("/users/*")
 public class UserServlet extends HttpServlet {
     private final UserService userService = new UserService();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

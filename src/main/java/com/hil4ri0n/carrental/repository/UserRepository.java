@@ -2,6 +2,7 @@ package com.hil4ri0n.carrental.repository;
 
 import com.hil4ri0n.carrental.model.User;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +18,10 @@ public class UserRepository {
     }
 
     private void addTestUsers() {
-        save(new User("Alice", "alice@example.com"));
-        save(new User("Bob", "bob@example.com"));
-        save(new User("Charlie", "charlie@example.com"));
-        save(new User("Diana", "diana@example.com"));
+        save(User.builder().login("Alice").email("alice@example.com").build());
+        save(User.builder().login("Bob").email("bob@example.com").build());
+        save(User.builder().login("Charlie").email("charlie@example.com").build());
+        save(User.builder().login("Diana").email("diana@example.com").build());
     }
 
     public List<User> findAll() {
@@ -32,6 +33,8 @@ public class UserRepository {
     }
 
     public void save(User user) {
+        user.setId(UUID.randomUUID());
+        user.setJoinedAt(LocalDate.now());
         users.put(user.getId(), user);
     }
 }
