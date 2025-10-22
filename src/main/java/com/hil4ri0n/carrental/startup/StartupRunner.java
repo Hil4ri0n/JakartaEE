@@ -12,24 +12,28 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Initialized;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @ApplicationScoped
+@NoArgsConstructor(force = true)
 public class StartupRunner {
 
-    @Inject
-    private VehicleService vehicleService;
+    private final VehicleService vehicleService;
+    private final RentalService rentalService;
+    private final UserService userService;
 
     @Inject
-    private RentalService rentalService;
-
-    @Inject
-    private UserService userService;
+    public StartupRunner(VehicleService vehicleService, RentalService rentalService, UserService userService) {
+        this.vehicleService = vehicleService;
+        this.rentalService = rentalService;
+        this.userService = userService;
+    }
 
     public void onStart(@Observes @Initialized(ApplicationScoped.class) Object event) {
-        System.out.println("=== CDI startup initialized ===");
+        System.out.println("=========================");
 
         User user = userService.getAllUsers().getFirst();
         Vehicle vehicle = vehicleService.getAll().getFirst();
@@ -44,11 +48,11 @@ public class StartupRunner {
 
         rentalService.add(rental);
 
-        System.out.println("Available vehicles:");
+        System.out.println("Vehicles:");
         vehicleService.getAll()
                 .forEach(v -> System.out.println(" - " + v.getBrand() + " " + v.getModel()));
 
-        System.out.println("Current rentals:");
+        System.out.println("Rentals:");
         rentalService.getAll()
                 .forEach(r -> System.out.println(" - " + r.getUser().getLogin()
                         + " rented " + r.getVehicle().getModel()));

@@ -19,9 +19,15 @@ import java.util.UUID;
 @WebServlet("/users/*")
 public class UserServlet extends HttpServlet {
 
+    private final UserService userService;
+    private final ObjectMapper objectMapper;
+
     @Inject
-    private UserService userService;
-    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    public UserServlet(UserService userService) {
+        super();
+        this.userService = userService;
+        objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
