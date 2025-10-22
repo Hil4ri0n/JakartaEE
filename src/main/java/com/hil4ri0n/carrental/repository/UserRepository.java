@@ -1,6 +1,7 @@
 package com.hil4ri0n.carrental.repository;
 
 import com.hil4ri0n.carrental.model.User;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+@ApplicationScoped
 public class UserRepository {
     private final Map<UUID, User> users = new HashMap<>();
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hil4ri0n.carrental.model.User;
 import com.hil4ri0n.carrental.service.UserService;
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,8 +18,10 @@ import java.util.UUID;
 
 @WebServlet("/users/*")
 public class UserServlet extends HttpServlet {
-    private final UserService userService = new UserService();
-    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());;
+
+    @Inject
+    private UserService userService;
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
