@@ -20,6 +20,7 @@ public class UserServlet extends HttpServlet {
     private final UserService userService = new UserService();
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());;
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json");
