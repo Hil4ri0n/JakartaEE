@@ -12,11 +12,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Getter
 @Setter
 public class Vehicle {
+    private UUID id;
     private String vin;
     private String brand;
     private String model;

@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Builder
 @NoArgsConstructor
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class Rental {
+    private UUID id;
     private Vehicle vehicle;
     private User user;
     private LocalDateTime startAt;

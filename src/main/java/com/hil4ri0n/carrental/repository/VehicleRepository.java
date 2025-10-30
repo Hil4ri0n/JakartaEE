@@ -10,30 +10,37 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @ApplicationScoped
 public class VehicleRepository {
-    private final List<Vehicle> vehicles = new ArrayList<>();
+    private final Map<UUID, Vehicle> vehicles = new HashMap<>();
 
     public VehicleRepository() {
         addSampleVehicles();
     }
 
     private void addSampleVehicles() {
-        vehicles.add(new Vehicle("VIN001", "Tesla", "Model 3", LocalDate.of(2022, 5, 10),
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+        vehicles.put(id1 ,new Vehicle(id1, "VIN001", "Tesla", "Model 3", LocalDate.of(2022, 5, 10),
                 LocalDateTime.now(), FuelType.ELECTRIC, Transmission.AUTOMATIC,
                 VehicleStatus.AVAILABLE, new BigDecimal("300.00"), new ArrayList<>()));
-        vehicles.add(new Vehicle("VIN002", "Toyota", "Corolla", LocalDate.of(2020, 2, 20),
+        vehicles.put(id2 ,new Vehicle(id2,"VIN002", "Toyota", "Corolla", LocalDate.of(2020, 2, 20),
                 LocalDateTime.now(), FuelType.PETROL, Transmission.MANUAL,
                 VehicleStatus.AVAILABLE, new BigDecimal("150.00"), new ArrayList<>()));
     }
 
     public List<Vehicle> findAll() {
-        return vehicles;
+        return new ArrayList<>(vehicles.values());
     }
 
     public void save(Vehicle vehicle) {
-        vehicles.add(vehicle);
+        UUID id = UUID.randomUUID();
+        vehicle.setId(id);
+        vehicles.put(id, vehicle);
     }
 }
