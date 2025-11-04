@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/templates/base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets">
+
+    <ui:define name="title">Formularz wynajmu</ui:define>
+
+    <ui:define name="content">
+        <h2>#{rentalFormView.editMode ? 'Edycja wynajmu' : 'Nowy wynajem'}</h2>
+
+        <h:form>
+            <h:panelGrid columns="2" columnClasses="label,value" styleClass="form">
+                <h:outputLabel for="vehicle" value="Pojazd"/>
+                <h:selectOneMenu id="vehicle"
+                                 value="#{rentalFormView.rental.vehicle}"
+                                 converter="vehicleConverter">
+                    <f:selectItem itemLabel="-- wybierz --" itemValue="#{null}"/>
+                    <f:selectItems value="#{rentalFormView.allVehicles}"
+                                   var="v"
+                                   itemValue="#{v}"
+                                   itemLabel="#{v.brand} #{v.model} (#{v.vin})"/>
+                </h:selectOneMenu>
+
+                <h:outputLabel for="user" value="Użytkownik"/>
+                <h:selectOneMenu id="user"
+                                 value="#{rentalFormView.rental.user}"
+                                 converter="userConverter">
+                    <f:selectItem itemLabel="-- wybierz --" itemValue="#{null}"/>
+                    <f:selectItems value="#{rentalFormView.allUsers}"
+                                   var="u"
+                                   itemValue="#{u}"
+                                   itemLabel="#{u.login} (#{u.email})"/>
+                </h:selectOneMenu>
+
+                <h:outputLabel for="startAt" value="Od"/>
+                <h:inputText id="startAt" value="#{rentalFormView.rental.startAt}">
+                    <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd'T'HH:mm"/>
+                </h:inputText>
+
+                <h:outputLabel for="endAt" value="Do"/>
+                <h:inputText id="endAt" value="#{rentalFormView.rental.endAt}">
+                    <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd'T'HH:mm"/>
+                </h:inputText>
+
+                <h:outputLabel for="status" value="Status"/>
+                <h:outputText id="status" value="#{rentalFormView.rental.status}"/>
+                <!--<h:selectOneMenu id="status" value="#{rentalFormView.rental.status}">
+                    <f:selectItems value="#{rentalFormView.allStatuses}" var="s"
+                                   itemValue="#{s}" itemLabel="#{s}"/>
+                </h:selectOneMenu>-->
+
+                <h:outputLabel for="price" value="Cena"/>
+                <h:inputText id="price" value="#{rentalFormView.rental.price}"/>
+            </h:panelGrid>
+
+            <div class="actions" style="margin-top:12px;">
+                <h:commandButton value="Zapisz" action="#{rentalFormView.save}"/>
+                <h:link outcome="vehicles" value="Anuluj"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

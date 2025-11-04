@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title><ui:insert name="title">CarRental</ui:insert></title>
+    <h:outputStylesheet library="css" name="styles.css"/>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+</h:head>
+<h:body>
+    <div class="layout">
+
+        <div class="topbar">
+            <ui:insert name="topbar">CarRental – demo JSF + CDI</ui:insert>
+        </div>
+
+        <header class="header">
+            <h1><ui:insert name="headerTitle">Wypożyczalnia samochodów</ui:insert></h1>
+        </header>
+
+        <nav class="nav">
+            <h:link outcome="index" value="Strona główna"/>
+            <h:link outcome="vehicles" value="Pojazdy"/>
+            <h:link outcome="/rental-form" value="Nowy wynajem"/>
+        </nav>
+
+        <main class="container">
+            <div class="card">
+                <ui:insert name="content"/>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <ui:insert name="footer">© #{request.serverName} · #{request.contextPath} · #{request.locale.displayName}</ui:insert>
+        </footer>
+    </div>
+</h:body>
+</html>

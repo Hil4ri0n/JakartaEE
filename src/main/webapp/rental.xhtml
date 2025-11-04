@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/templates/base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets">
+
+    <ui:define name="title">Szczegóły wynajmu</ui:define>
+
+    <ui:define name="content">
+        <h2>Szczegóły wynajmu</h2>
+
+        <h:panelGroup rendered="#{not empty rentalDetailView.rental}">
+            <p><b>ID:</b> #{rentalDetailView.rental.id}</p>
+            <p><b>Pojazd:</b> #{rentalDetailView.rental.vehicle.brand} #{rentalDetailView.rental.vehicle.model} (#{rentalDetailView.rental.vehicle.vin})</p>
+            <p><b>Użytkownik:</b> #{rentalDetailView.rental.user.login}</p>
+            <p><b>Od:</b> #{rentalDetailView.rental.startAt}</p>
+            <p><b>Do:</b> #{rentalDetailView.rental.endAt}</p>
+            <p><b>Status:</b> #{rentalDetailView.rental.status}</p>
+            <p><b>Cena:</b> #{rentalDetailView.rental.price}</p>
+
+            <p>
+                <h:link outcome="vehicle" value="Wróć do pojazdu">
+                    <f:param name="vin" value="#{rentalDetailView.rental.vehicle.vin}"/>
+                </h:link>
+            </p>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{empty rentalDetailView.rental}">
+            <p>Nie znaleziono wynajmu. Wróć do
+                <h:link outcome="vehicles" value="listy pojazdów"/>
+            </p>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>
