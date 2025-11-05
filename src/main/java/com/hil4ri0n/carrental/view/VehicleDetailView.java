@@ -14,7 +14,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Named
 @ViewScoped
@@ -44,9 +43,7 @@ public class VehicleDetailView implements Serializable {
     }
 
     private void refreshRentals() {
-        rentals = rentalService.getAll().stream()
-                .filter(r -> r.getVehicle() != null && vin.equalsIgnoreCase(r.getVehicle().getVin()))
-                .collect(Collectors.toList());
+        rentals = rentalService.getByVehicleVin(vin);
     }
 
     public Vehicle getVehicle() {
