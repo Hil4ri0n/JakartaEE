@@ -15,7 +15,8 @@
                 <h:outputLabel for="vehicle" value="Pojazd"/>
                 <h:selectOneMenu id="vehicle"
                                  value="#{rentalFormView.rental.vehicle}"
-                                 converter="vehicleConverter">
+                                 converter="vehicleConverter"
+                                 disabled="#{rentalFormView.editMode}">
                     <f:selectItem itemLabel="-- wybierz --" itemValue="#{null}"/>
                     <f:selectItems value="#{rentalFormView.allVehicles}"
                                    var="v"
@@ -26,7 +27,8 @@
                 <h:outputLabel for="user" value="Użytkownik"/>
                 <h:selectOneMenu id="user"
                                  value="#{rentalFormView.rental.user}"
-                                 converter="userConverter">
+                                 converter="userConverter"
+                                 disabled="#{rentalFormView.editMode}">
                     <f:selectItem itemLabel="-- wybierz --" itemValue="#{null}"/>
                     <f:selectItems value="#{rentalFormView.allUsers}"
                                    var="u"
@@ -45,11 +47,11 @@
                 </h:inputText>
 
                 <h:outputLabel for="status" value="Status"/>
-                <h:outputText id="status" value="#{rentalFormView.rental.status}"/>
-                <!--<h:selectOneMenu id="status" value="#{rentalFormView.rental.status}">
+                <!--<h:outputText id="status" value="#{rentalFormView.rental.status}"/>-->
+                <h:selectOneMenu id="status" value="#{rentalFormView.rental.status}">
                     <f:selectItems value="#{rentalFormView.allStatuses}" var="s"
                                    itemValue="#{s}" itemLabel="#{s}"/>
-                </h:selectOneMenu>-->
+                </h:selectOneMenu>
 
                 <h:outputLabel for="price" value="Cena"/>
                 <h:inputText id="price" value="#{rentalFormView.rental.price}"/>

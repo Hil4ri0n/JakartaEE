@@ -50,6 +50,9 @@
                                     <h:link outcome="rental" value="Szczegóły">
                                         <f:param name="id" value="#{r.id}"/>
                                     </h:link>
+                                    <h:link outcome="rental-form" value="Edytuj">
+                                        <f:param name="id" value="#{r.id}"/>
+                                    </h:link>
                                     <h:form>
                                         <h:commandButton value="Usuń"
                                                          action="#{vehicleDetailView.deleteRental(r.id)}"/>
