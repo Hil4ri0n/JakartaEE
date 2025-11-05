@@ -1,0 +1,41 @@
+### Get all vehicles
+GET http://localhost:9080/car-rental/api/vehicles
+Accept: application/json
+
+### Get a vehicle by vin
+GET http://localhost:9080/car-rental/api/vehicles/VIN123
+Accept: application/json
+
+### Create a vehicle
+POST http://localhost:9080/car-rental/api/vehicles
+Content-Type: application/json
+Accept: application/json
+
+{
+  "vin": "VIN123",
+  "brand": "Ford",
+  "model": "Focus",
+  "dailyRate": 120.00,
+  "fuel": "PETROL",
+  "transmission": "MANUAL",
+  "status": "AVAILABLE"
+}
+
+### Update a vehicle
+
+PUT http://localhost:9080/car-rental/api/vehicles/VIN123
+Content-Type: application/json
+Accept: application/json
+
+{
+  "brand": "Ford",
+  "model": "Focus MK4",
+  "dailyRate": 130.00,
+  "fuel": "PETROL",
+  "transmission": "MANUAL",
+  "status": "AVAILABLE"
+}
+
+### Delete a vehicle by vin
+DELETE http://localhost:9080/car-rental/api/vehicles/VIN001
+

@@ -21,7 +21,7 @@ public class VehicleListView implements Serializable {
     }
 
     public String delete(String vin) {
-        vehicleService.removeWithRentals(vin);
+        vehicleService.deleteVehicle(vin);
         return "vehicles.xhtml?faces-redirect=true";
     }
 }

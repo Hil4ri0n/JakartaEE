@@ -5,6 +5,7 @@ import com.hil4ri0n.carrental.model.enums.Transmission;
 import com.hil4ri0n.carrental.model.enums.VehicleStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter

@@ -22,8 +22,12 @@ public class RentalService {
         this.rentalRepository = rentalRepository;
     }
 
-    public void add(Rental rental) {
+    public void createRental(Rental rental) {
         rentalRepository.save(rental);
+    }
+
+    public Optional<Rental> getById(UUID id) {
+        return rentalRepository.findById(id);
     }
 
     public List<Rental> getAll() {
@@ -32,18 +36,6 @@ public class RentalService {
 
     public void deleteById(UUID id) {
         rentalRepository.deleteById(id);
-    }
-
-    public List<Rental> findByVehicleBrand(String brand) {
-        return rentalRepository.findByVehicleBrand(brand);
-    }
-
-    public void deleteByVehicleBrand(String brand) {
-        rentalRepository.deleteByVehicleBrand(brand);
-    }
-
-    public Optional<Rental> getById(UUID id) {
-        return rentalRepository.findById(id);
     }
 
     public void upsert(Rental rental) {
@@ -70,5 +62,13 @@ public class RentalService {
                 .filter(r -> r.getVehicle() != null && vin != null && vin.equalsIgnoreCase(r.getVehicle().getVin()))
                 .map(Rental::getId)
                 .forEach(rentalRepository::deleteById);
+    }
+
+    public List<Rental> getByVehicleVin(String vin) {
+        return rentalRepository.findByVin(vin);
+    }
+
+    public Optional<Rental> getByIdAndVehicleVin(UUID id, String vin) {
+        return rentalRepository.findByIdAndVin(id, vin);
     }
 }

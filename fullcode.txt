@@ -1,0 +1,1617 @@
+pom.xml:
+<code>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.hil4ri0n</groupId>
+    <artifactId>car-rental</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>jakartaEE_lab0</name>
+    <packaging>war</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <junit.version>5.13.2</junit.version>
+        <lombok.version>1.18.42</lombok.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>11.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.20.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.20.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
+            </plugin>
+            <plugin>
+                <groupId>io.openliberty.tools</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+                <version>3.7.1</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+</code>
+
+src\main\java\com\hil4ri0n\carrental\model\Rental.java:
+<code>
+package com.hil4ri0n.carrental.model;
+
+import com.hil4ri0n.carrental.model.enums.RentalStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class Rental {
+    private UUID id;
+    private Vehicle vehicle;
+    private User user;
+    private LocalDateTime startAt;
+    private LocalDateTime endAt;
+    private RentalStatus status;
+    private BigDecimal price;
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\model\User.java:
+<code>
+package com.hil4ri0n.carrental.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter
+@Setter
+public class User {
+    private UUID id;
+    private String email;
+    private String login;
+    private LocalDate joinedAt;
+    private List<Rental> rentals = new ArrayList<>();
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\model\Vehicle.java:
+<code>
+package com.hil4ri0n.carrental.model;
+
+import com.hil4ri0n.carrental.model.enums.FuelType;
+import com.hil4ri0n.carrental.model.enums.Transmission;
+import com.hil4ri0n.carrental.model.enums.VehicleStatus;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@AllArgsConstructor
+@Getter
+@Setter
+public class Vehicle {
+    private UUID id;
+    private String vin;
+    private String brand;
+    private String model;
+    private LocalDate registeredOn;
+    private LocalDateTime addedAt;
+    private FuelType fuel;
+    private Transmission transmission;
+    private VehicleStatus status;
+    private BigDecimal dailyRate;
+    private List<Rental> rentals = new ArrayList<>();
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\model\enums\FuelType.java:
+<code>
+package com.hil4ri0n.carrental.model.enums;
+
+public enum FuelType {
+    PETROL,
+    DIESEL,
+    HYBRID,
+    ELECTRIC
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\model\enums\RentalStatus.java:
+<code>
+package com.hil4ri0n.carrental.model.enums;
+
+public enum RentalStatus {
+    CREATED,
+    ACTIVE,
+    COMPLETED,
+    CANCELED
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\model\enums\Transmission.java:
+<code>
+package com.hil4ri0n.carrental.model.enums;
+
+public enum Transmission {
+    MANUAL,
+    AUTOMATIC
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\model\enums\VehicleStatus.java:
+<code>
+package com.hil4ri0n.carrental.model.enums;
+
+public enum VehicleStatus {
+    AVAILABLE,
+    RENTED,
+    SERVICE,
+    RESERVED
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\repository\RentalRepository.java:
+<code>
+package com.hil4ri0n.carrental.repository;
+
+import com.hil4ri0n.carrental.model.Rental;
+import jakarta.enterprise.context.ApplicationScoped;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+@ApplicationScoped
+public class RentalRepository {
+    private final Map<UUID, Rental> rentals = new HashMap<>();
+
+    public void save(Rental rental) {
+        UUID id = UUID.randomUUID();
+        rental.setId(id);
+        rentals.put(id, rental);
+    }
+
+    public List<Rental> findAll() {
+        return new ArrayList<>(rentals.values());
+    }
+
+    public void deleteById(UUID id) {
+        rentals.remove(id);
+    }
+
+    public Optional<Rental> findById(UUID id) {
+        return Optional.ofNullable(rentals.get(id));
+    }
+
+    public List<Rental> findByVehicleBrand(String brand) {
+        List<Rental> out = new ArrayList<>();
+        for (Rental r : rentals.values()) {
+            if (r.getVehicle() != null && brand.equals(r.getVehicle().getBrand())) {
+                out.add(r);
+            }
+        }
+        return out;
+    }
+
+    public void deleteByVehicleBrand(String brand) {
+        rentals.values().removeIf(r ->
+                r.getVehicle() != null && r.getVehicle().getBrand().equals(brand));
+    }
+
+    public void update(Rental rental) {
+        rentals.put(rental.getId(), rental);
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\repository\UserRepository.java:
+<code>
+package com.hil4ri0n.carrental.repository;
+
+import com.hil4ri0n.carrental.model.User;
+import jakarta.enterprise.context.ApplicationScoped;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+@ApplicationScoped
+public class UserRepository {
+    private final Map<UUID, User> users = new HashMap<>();
+
+    public UserRepository() {
+        addTestUsers();
+    }
+
+    private void addTestUsers() {
+        save(User.builder().login("Alice").email("alice@example.com").build());
+        save(User.builder().login("Bob").email("bob@example.com").build());
+        save(User.builder().login("Charlie").email("charlie@example.com").build());
+        save(User.builder().login("Diana").email("diana@example.com").build());
+    }
+
+    public List<User> findAll() {
+        return new ArrayList<>(users.values());
+    }
+
+    public Optional<User> findById(UUID id) {
+        return Optional.ofNullable(users.get(id));
+    }
+
+    public void save(User user) {
+        user.setId(UUID.randomUUID());
+        user.setJoinedAt(LocalDate.now());
+        users.put(user.getId(), user);
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\repository\VehicleRepository.java:
+<code>
+package com.hil4ri0n.carrental.repository;
+
+import com.hil4ri0n.carrental.model.Vehicle;
+import com.hil4ri0n.carrental.model.enums.FuelType;
+import com.hil4ri0n.carrental.model.enums.Transmission;
+import com.hil4ri0n.carrental.model.enums.VehicleStatus;
+import jakarta.enterprise.context.ApplicationScoped;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@ApplicationScoped
+public class VehicleRepository {
+
+    private final Map<UUID, Vehicle> vehicles = new HashMap<>();
+
+    public VehicleRepository() {
+        addSampleVehicles();
+    }
+
+    private void addSampleVehicles() {
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+        vehicles.put(id1, new Vehicle(
+                id1, "VIN001", "Tesla", "Model 3", LocalDate.of(2022, 5, 10),
+                LocalDateTime.now(), FuelType.ELECTRIC, Transmission.AUTOMATIC,
+                VehicleStatus.AVAILABLE, new BigDecimal("300.00"), new ArrayList<>()));
+
+        vehicles.put(id2, new Vehicle(
+                id2, "VIN002", "Toyota", "Corolla", LocalDate.of(2020, 2, 20),
+                LocalDateTime.now(), FuelType.PETROL, Transmission.MANUAL,
+                VehicleStatus.AVAILABLE, new BigDecimal("150.00"), new ArrayList<>()));
+    }
+
+    public void save(Vehicle vehicle) {
+        // jeśli nie ma ID – nadaj
+        if (vehicle.getId() == null) {
+            vehicle.setId(UUID.randomUUID());
+        }
+        vehicles.put(vehicle.getId(), vehicle);
+    }
+
+    public List<Vehicle> findAll() {
+        return new ArrayList<>(vehicles.values());
+    }
+
+    public Optional<Vehicle> findById(UUID id) {
+        return Optional.ofNullable(vehicles.get(id));
+    }
+
+    public Optional<Vehicle> findByVin(String vin) {
+        if (vin == null) return Optional.empty();
+        return vehicles.values().stream()
+                .filter(v -> vin.equalsIgnoreCase(v.getVin()))
+                .findFirst();
+    }
+
+    public void deleteById(UUID id) {
+        vehicles.remove(id);
+    }
+
+    public void deleteByVin(String vin) {
+        List<UUID> toRemove = vehicles.values().stream()
+                .filter(v -> vin != null && vin.equalsIgnoreCase(v.getVin()))
+                .map(Vehicle::getId)
+                .collect(Collectors.toList());
+
+        toRemove.forEach(vehicles::remove);
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\rest\ApiApplication.java:
+<code>
+package com.hil4ri0n.carrental.rest;
+
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
+
+@ApplicationPath("/api")
+public class ApiApplication extends Application {
+}
+</code>
+
+src\main\java\com\hil4ri0n\carrental\rest\RentalResource.java:
+<code>
+package com.hil4ri0n.carrental.rest;
+
+import com.hil4ri0n.carrental.model.Rental;
+import com.hil4ri0n.carrental.model.Vehicle;
+import com.hil4ri0n.carrental.service.RentalService;
+import com.hil4ri0n.carrental.service.VehicleService;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.*;
+
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Path("/vehicles/{vin}/rentals")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+@RequestScoped
+public class RentalResource {
+
+    @Inject
+    RentalService rentalService;
+
+    @Inject
+    VehicleService vehicleService;
+
+    @Context
+    UriInfo uriInfo;
+
+    @GET
+    public Response getAll(@PathParam("vin") String vin) {
+        Optional<Vehicle> vehicle = vehicleService.getByVin(vin);
+        if (vehicle.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        List<Rental> list = rentalService.getByVehicleVin(vin);
+        return Response.ok(list).build();
+    }
+
+    @GET
+    @Path("{id}")
+    public Response getOne(@PathParam("vin") String vin, @PathParam("id") String idStr) {
+        Optional<Vehicle> vehicle = vehicleService.getByVin(vin);
+        if (vehicle.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        UUID id;
+        try {
+            id = UUID.fromString(idStr);
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid rental id").build();
+        }
+
+        return rentalService.getByIdAndVehicleVin(id, vin)
+                .map(r -> Response.ok(r).build())
+                .orElseGet(() -> Response.status(Response.Status.NOT_FOUND).build());
+    }
+
+    @POST
+    public Response create(@PathParam("vin") String vin, Rental rental) {
+        Optional<Vehicle> vehicle = vehicleService.getByVin(vin);
+        if (vehicle.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Vehicle not found").build();
+        }
+        // wymuś kategorię z URI
+        rental.setVehicle(vehicle.get());
+        // nie pozwalaj nadawać ID z zewnątrz
+        rental.setId(null);
+
+        rentalService.saveOrUpdate(rental); // ustawi status CREATED jeśli null
+        if (rental.getId() == null) {
+            // w Twoim repo ID nadawane jest w save(); po saveOrUpdate powinno już być
+            return Response.serverError().entity("Failed to create rental").build();
+        }
+
+        URI location = uriInfo.getAbsolutePathBuilder()
+                .path(rental.getId().toString())
+                .build();
+        return Response.created(location).entity(rental).build();
+    }
+
+    @PUT
+    @Path("{id}")
+    public Response update(@PathParam("vin") String vin,
+                           @PathParam("id") String idStr,
+                           Rental rental) {
+
+        Optional<Vehicle> vehicle = vehicleService.getByVin(vin);
+        if (vehicle.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Vehicle not found").build();
+        }
+
+        UUID id;
+        try {
+            id = UUID.fromString(idStr);
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid rental id").build();
+        }
+
+        var existing = rentalService.getByIdAndVehicleVin(id, vin);
+        if (existing.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        // wymuszamy przynależność do kategorii oraz ID z path
+        rental.setId(id);
+        rental.setVehicle(vehicle.get());
+
+        rentalService.update(rental);
+        return Response.ok(rental).build();
+    }
+
+    @DELETE
+    @Path("{id}")
+    public Response deleteOne(@PathParam("vin") String vin, @PathParam("id") String idStr) {
+        Optional<Vehicle> vehicle = vehicleService.getByVin(vin);
+        if (vehicle.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        UUID id;
+        try {
+            id = UUID.fromString(idStr);
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid rental id").build();
+        }
+
+        var existing = rentalService.getByIdAndVehicleVin(id, vin);
+        if (existing.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        rentalService.deleteById(id);
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    public Response deleteAllForVehicle(@PathParam("vin") String vin) {
+        Optional<Vehicle> vehicle = vehicleService.getByVin(vin);
+        if (vehicle.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        rentalService.deleteByVehicleVin(vin);
+        return Response.noContent().build();
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\rest\VehicleResource.java:
+<code>
+package com.hil4ri0n.carrental.rest;
+
+import com.hil4ri0n.carrental.model.Vehicle;
+import com.hil4ri0n.carrental.service.VehicleService;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+
+import java.net.URI;
+import java.util.List;
+
+@Path("/vehicles")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+@RequestScoped
+public class VehicleResource {
+
+    @Inject
+    VehicleService vehicleService;
+
+    @Context
+    UriInfo uriInfo;
+
+    /**
+     * GET /api/vehicles – lista wszystkich kategorii (Vehicle)
+     */
+    @GET
+    public Response getAll() {
+        List<Vehicle> all = vehicleService.getAll();
+        return Response.ok(all).build(); // 200 + JSON
+    }
+
+    /**
+     * GET /api/vehicles/{vin} – pojedyncza kategoria (Vehicle) po VIN
+     */
+    @GET
+    @Path("{vin}")
+    public Response getOne(@PathParam("vin") String vin) {
+        return vehicleService.getByVin(vin)
+                .map(v -> Response.ok(v).build())
+                .orElseGet(() -> Response.status(Response.Status.NOT_FOUND).build());
+    }
+
+    /**
+     * POST /api/vehicles – dodawanie kategorii (Vehicle)
+     * Zwraca 201 Created + Location: /api/vehicles/{vin}
+     */
+    @POST
+    public Response create(Vehicle vehicle) {
+        if (vehicle == null || vehicle.getVin() == null || vehicle.getVin().isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("VIN is required").build();
+        }
+
+        // nie pozwalamy na duplikat VIN
+        if (vehicleService.getByVin(vehicle.getVin()).isPresent()) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity("Vehicle with this VIN already exists").build();
+        }
+
+        vehicleService.add(vehicle);
+        URI location = uriInfo.getAbsolutePathBuilder()
+                .path(vehicle.getVin())
+                .build();
+        return Response.created(location).entity(vehicle).build(); // 201 + Location + body
+    }
+
+    /**
+     * PUT /api/vehicles/{vin} – modyfikowanie kategorii (Vehicle)
+     * Body może (ale nie musi) zawierać VIN – i tak używamy VIN z path.
+     */
+    @PUT
+    @Path("{vin}")
+    public Response update(@PathParam("vin") String vin, Vehicle vehicle) {
+        // Czy istnieje?
+        var existing = vehicleService.getByVin(vin);
+        if (existing.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        // Nadpisujemy VIN zgodnie z adresem zasobu, ignorując ewentualny VIN z body
+        Vehicle toUpdate = vehicle;
+        toUpdate.setVin(vin);
+
+        // zachowujemy istniejące ID (repo zapisuje po ID)
+        toUpdate.setId(existing.get().getId());
+
+        vehicleService.add(toUpdate); // repo.save nadpisze po ID
+        return Response.ok(toUpdate).build(); // 200 + JSON
+    }
+
+    /**
+     * DELETE /api/vehicles/{vin} – usunięcie kategorii (Vehicle)
+     * UWAGA: wymaganie „usuwanie wraz z elementami” – czyścimy powiązane Rentale.
+     */
+    @DELETE
+    @Path("{vin}")
+    public Response delete(@PathParam("vin") String vin) {
+        // jeśli nie istnieje – 404
+        if (vehicleService.getByVin(vin).isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        vehicleService.removeWithRentals(vin); // usuwa także Rentale
+        return Response.noContent().build(); // 204
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\service\RentalService.java:
+<code>
+package com.hil4ri0n.carrental.service;
+
+import com.hil4ri0n.carrental.model.Rental;
+import com.hil4ri0n.carrental.model.enums.RentalStatus;
+import com.hil4ri0n.carrental.repository.RentalRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@ApplicationScoped
+@NoArgsConstructor(force = true)
+public class RentalService {
+
+    private final RentalRepository rentalRepository;
+
+    @Inject
+    public RentalService(RentalRepository rentalRepository) {
+        this.rentalRepository = rentalRepository;
+    }
+
+    public void add(Rental rental) {
+        rentalRepository.save(rental);
+    }
+
+    public List<Rental> getAll() {
+        return rentalRepository.findAll();
+    }
+
+    public void deleteById(UUID id) {
+        rentalRepository.deleteById(id);
+    }
+
+    public List<Rental> findByVehicleBrand(String brand) {
+        return rentalRepository.findByVehicleBrand(brand);
+    }
+
+    public void deleteByVehicleBrand(String brand) {
+        rentalRepository.deleteByVehicleBrand(brand);
+    }
+
+    public Optional<Rental> getById(UUID id) {
+        return rentalRepository.findById(id);
+    }
+
+    public void upsert(Rental rental) {
+        if (rental.getId() != null && rentalRepository.findById(rental.getId()).isPresent()) {
+            rentalRepository.update(rental);
+        } else {
+            rentalRepository.save(rental);
+        }
+    }
+
+    public void saveOrUpdate(Rental rental) {
+        if(rental.getStatus() == null) {
+            rental.setStatus(RentalStatus.CREATED);
+        }
+        upsert(rental);
+    }
+
+    public void update(Rental rental) {
+        rentalRepository.update(rental);
+    }
+
+    public void deleteByVehicleVin(String vin) {
+        rentalRepository.findAll().stream()
+                .filter(r -> r.getVehicle() != null && vin != null && vin.equalsIgnoreCase(r.getVehicle().getVin()))
+                .map(Rental::getId)
+                .forEach(rentalRepository::deleteById);
+    }
+
+    public List<Rental> getByVehicleVin(String vin) {
+        return rentalRepository.findAll().stream()
+                .filter(r -> r.getVehicle() != null
+                        && vin != null
+                        && vin.equalsIgnoreCase(r.getVehicle().getVin()))
+                .toList();
+    }
+
+    public Optional<Rental> getByIdAndVehicleVin(UUID id, String vin) {
+        return rentalRepository.findById(id)
+                .filter(r -> r.getVehicle() != null
+                        && vin != null
+                        && vin.equalsIgnoreCase(r.getVehicle().getVin()));
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\service\UserService.java:
+<code>
+package com.hil4ri0n.carrental.service;
+
+import com.hil4ri0n.carrental.model.User;
+import com.hil4ri0n.carrental.repository.UserRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@ApplicationScoped
+@NoArgsConstructor(force = true)
+public class UserService {
+
+    private final UserRepository userRepository;
+
+    @Inject
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public Optional<User> getUserById(UUID id) {
+        return userRepository.findById(id);
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\service\VehicleService.java:
+<code>
+package com.hil4ri0n.carrental.service;
+
+import com.hil4ri0n.carrental.model.Vehicle;
+import com.hil4ri0n.carrental.repository.VehicleRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.Optional;
+
+@ApplicationScoped
+@NoArgsConstructor(force = true)
+public class VehicleService {
+
+    private final VehicleRepository vehicleRepository;
+    private final RentalService rentalService;
+
+    @Inject
+    public VehicleService(VehicleRepository vehicleRepository, RentalService rentalService) {
+        this.vehicleRepository = vehicleRepository;
+        this.rentalService = rentalService;
+    }
+
+    public void add(Vehicle vehicle) {
+        vehicleRepository.save(vehicle);
+    }
+
+    public List<Vehicle> getAll() {
+        return vehicleRepository.findAll();
+    }
+
+    public Optional<Vehicle> getByVin(String vin) {
+        return vehicleRepository.findByVin(vin);
+    }
+
+    public void removeWithRentals(String vin) {
+        rentalService.deleteByVehicleVin(vin);
+        vehicleRepository.deleteByVin(vin);
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\servlet\AvatarServlet.java:
+<code>
+package com.hil4ri0n.carrental.servlet;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
+@WebServlet("/api/avatars/*")
+@MultipartConfig
+public class AvatarServlet extends HttpServlet {
+
+    private Path avatarDir;
+
+    @Override
+    public void init() throws ServletException {
+        avatarDir = Paths.get(getServletContext().getRealPath("/"),
+                getServletContext().getInitParameter("avatarDir"));
+        try {
+            Files.createDirectories(avatarDir);
+        } catch (IOException e) {
+            throw new ServletException("Cannot create avatar directory", e);
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String id = req.getPathInfo().substring(1);
+        Path file = avatarDir.resolve(id + ".png");
+        if (Files.exists(file)) {
+            resp.setContentType("image/png");
+            Files.copy(file, resp.getOutputStream());
+        } else {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        String id = req.getPathInfo().substring(1);
+        Part filePart = req.getPart("file");
+        if (filePart == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        Path file = avatarDir.resolve(id + ".png");
+        try (InputStream in = filePart.getInputStream()) {
+            Files.copy(in, file, StandardCopyOption.REPLACE_EXISTING);
+        }
+        resp.setStatus(HttpServletResponse.SC_CREATED);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String id = req.getPathInfo().substring(1);
+        Path file = avatarDir.resolve(id + ".png");
+        if (Files.deleteIfExists(file)) {
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        } else {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\servlet\UserServlet.java:
+<code>
+package com.hil4ri0n.carrental.servlet;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.hil4ri0n.carrental.model.User;
+import com.hil4ri0n.carrental.service.UserService;
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@WebServlet("/users/*")
+public class UserServlet extends HttpServlet {
+
+    private final UserService userService;
+    private final ObjectMapper objectMapper;
+
+    @Inject
+    public UserServlet(UserService userService) {
+        super();
+        this.userService = userService;
+        objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("application/json");
+
+        String pathInfo = request.getPathInfo();
+        if (pathInfo == null || pathInfo.equals("/")) {
+            List<User> users = userService.getAllUsers();
+            response.setStatus(HttpServletResponse.SC_OK);
+            objectMapper.writeValue(response.getOutputStream(), users);
+        } else {
+            String idStr = pathInfo.substring(1);
+            try {
+                UUID id = UUID.fromString(idStr);
+                Optional<User> user = userService.getUserById(id);
+                if (user.isPresent()) {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    objectMapper.writeValue(response.getOutputStream(), user.get());
+                } else {
+                    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                }
+            } catch (IllegalArgumentException e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
+        }
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\startup\StartupRunner.java:
+<code>
+package com.hil4ri0n.carrental.startup;
+
+import com.hil4ri0n.carrental.model.Rental;
+import com.hil4ri0n.carrental.model.User;
+import com.hil4ri0n.carrental.model.Vehicle;
+import com.hil4ri0n.carrental.model.enums.RentalStatus;
+import com.hil4ri0n.carrental.service.RentalService;
+import com.hil4ri0n.carrental.service.UserService;
+import com.hil4ri0n.carrental.service.VehicleService;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Initialized;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@ApplicationScoped
+@NoArgsConstructor(force = true)
+public class StartupRunner {
+
+    private final VehicleService vehicleService;
+    private final RentalService rentalService;
+    private final UserService userService;
+
+    @Inject
+    public StartupRunner(VehicleService vehicleService, RentalService rentalService, UserService userService) {
+        this.vehicleService = vehicleService;
+        this.rentalService = rentalService;
+        this.userService = userService;
+    }
+
+    public void onStart(@Observes @Initialized(ApplicationScoped.class) Object event) {
+        System.out.println("=========================");
+
+        User user = userService.getAllUsers().getFirst();
+        Vehicle vehicle = vehicleService.getAll().getFirst();
+
+        Rental rental = new Rental();
+        rental.setUser(user);
+        rental.setVehicle(vehicle);
+        rental.setStartAt(LocalDateTime.now());
+        rental.setEndAt(LocalDateTime.now().plusDays(3));
+        rental.setStatus(RentalStatus.CREATED);
+        rental.setPrice(new BigDecimal("900.00"));
+
+        rentalService.add(rental);
+
+        System.out.println("Vehicles:");
+        vehicleService.getAll()
+                .forEach(v -> System.out.println(" - " + v.getBrand() + " " + v.getModel()));
+
+        System.out.println("Rentals:");
+        rentalService.getAll()
+                .forEach(r -> System.out.println(" - " + r.getUser().getLogin()
+                        + " rented " + r.getVehicle().getModel()));
+    }
+}
+</code>
+
+src\main\java\com\hil4ri0n\carrental\view\RentalDetailView.java:
+<code>
+package com.hil4ri0n.carrental.view;
+
+import com.hil4ri0n.carrental.model.Rental;
+import com.hil4ri0n.carrental.service.RentalService;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import java.io.Serializable;
+import java.util.Optional;
+import java.util.UUID;
+
+@Named
+@ViewScoped
+public class RentalDetailView implements Serializable {
+
+    @Inject
+    private RentalService rentalService;
+
+    private String id;
+    private Rental rental;
+
+    @PostConstruct
+    public void init() {
+        id = FacesContext.getCurrentInstance()
+                .getExternalContext().getRequestParameterMap().get("id");
+        if (id != null) {
+            try {
+                UUID uuid = UUID.fromString(id);
+                Optional<Rental> opt = rentalService.getById(uuid);
+                opt.ifPresent(r -> rental = r);
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+    }
+
+    public Rental getRental() {
+        return rental;
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\view\RentalFormView.java:
+<code>
+package com.hil4ri0n.carrental.view;
+
+import com.hil4ri0n.carrental.model.Rental;
+import com.hil4ri0n.carrental.model.User;
+import com.hil4ri0n.carrental.model.Vehicle;
+import com.hil4ri0n.carrental.model.enums.RentalStatus;
+import com.hil4ri0n.carrental.service.RentalService;
+import com.hil4ri0n.carrental.service.UserService;
+import com.hil4ri0n.carrental.service.VehicleService;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Named
+@ViewScoped
+public class RentalFormView implements Serializable {
+
+    @Inject
+    private RentalService rentalService;
+
+    @Inject
+    private VehicleService vehicleService;
+
+    @Inject
+    private UserService userService;
+
+    private Rental rental;
+    private List<Vehicle> allVehicles;
+    private List<User> allUsers;
+    private boolean editMode;
+
+    @PostConstruct
+    public void init() {
+        allVehicles = vehicleService.getAll();
+        allUsers = userService.getAllUsers();
+
+        var params = FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getRequestParameterMap();
+
+        String idParam = params.get("id");
+        String vinParam = params.get("vin");
+
+        if (idParam != null && !idParam.isEmpty()) {
+            try {
+                UUID id = UUID.fromString(idParam);
+                Optional<Rental> opt = rentalService.getById(id);
+                if (opt.isPresent()) {
+                    rental = opt.get();
+                    editMode = true;
+                } else {
+                    createEmptyRental();
+                    editMode = false;
+                }
+            } catch (IllegalArgumentException e) {
+                createEmptyRental();
+                editMode = false;
+            }
+        } else {
+            createEmptyRental();
+            editMode = false;
+            if (vinParam != null && !vinParam.isEmpty()) {
+                vehicleService.getByVin(vinParam)
+                        .ifPresent(rental::setVehicle);
+            }
+        }
+    }
+
+    private void createEmptyRental() {
+        rental = new Rental();
+        rental.setStartAt(LocalDateTime.now());
+        rental.setEndAt(LocalDateTime.now().plusDays(1));
+        rental.setStatus(RentalStatus.CREATED);
+        rental.setPrice(BigDecimal.ZERO);
+    }
+
+    public Rental getRental() {
+        return rental;
+    }
+
+    public List<Vehicle> getAllVehicles() {
+        return allVehicles;
+    }
+
+    public List<User> getAllUsers() {
+        return allUsers;
+    }
+
+    public RentalStatus[] getAllStatuses() {
+        return RentalStatus.values();
+    }
+
+    public boolean isEditMode() {
+        return editMode;
+    }
+
+    public String save() {
+        rentalService.saveOrUpdate(rental);
+        if (rental.getVehicle() != null) {
+            return "vehicle.xhtml?faces-redirect=true&vin=" + rental.getVehicle().getVin();
+        }
+        return "vehicles.xhtml?faces-redirect=true";
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\view\VehicleDetailView.java:
+<code>
+package com.hil4ri0n.carrental.view;
+
+import com.hil4ri0n.carrental.model.Rental;
+import com.hil4ri0n.carrental.model.Vehicle;
+import com.hil4ri0n.carrental.service.RentalService;
+import com.hil4ri0n.carrental.service.VehicleService;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+@Named
+@ViewScoped
+public class VehicleDetailView implements Serializable {
+
+    @Inject
+    private VehicleService vehicleService;
+
+    @Inject
+    private RentalService rentalService;
+
+    private String vin;
+    private Vehicle vehicle;
+    private List<Rental> rentals;
+
+    @PostConstruct
+    public void init() {
+        vin = FacesContext.getCurrentInstance()
+                .getExternalContext().getRequestParameterMap().get("vin");
+        if (vin != null) {
+            Optional<Vehicle> opt = vehicleService.getByVin(vin);
+            opt.ifPresent(v -> {
+                vehicle = v;
+                refreshRentals();
+            });
+        }
+    }
+
+    private void refreshRentals() {
+        rentals = rentalService.getAll().stream()
+                .filter(r -> r.getVehicle() != null && vin.equalsIgnoreCase(r.getVehicle().getVin()))
+                .collect(Collectors.toList());
+    }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public List<Rental> getRentals() {
+        return rentals;
+    }
+
+    public String deleteRental(UUID id) {
+        rentalService.deleteById(id);
+        refreshRentals();
+        return null;
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\view\VehicleListBean.java:
+<code>
+package com.hil4ri0n.carrental.view;
+
+import com.hil4ri0n.carrental.model.Vehicle;
+import com.hil4ri0n.carrental.service.VehicleService;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import java.util.List;
+
+@Named("vehicleList")
+@RequestScoped
+public class VehicleListBean {
+
+    @Inject
+    private VehicleService vehicleService;
+
+    public List<Vehicle> getAll() {
+        return vehicleService.getAll();
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\view\VehicleListView.java:
+<code>
+package com.hil4ri0n.carrental.view;
+
+import com.hil4ri0n.carrental.model.Vehicle;
+import com.hil4ri0n.carrental.service.VehicleService;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import java.io.Serializable;
+import java.util.List;
+
+@Named
+@ViewScoped
+public class VehicleListView implements Serializable {
+
+    @Inject
+    private VehicleService vehicleService;
+
+    public List<Vehicle> getVehicles() {
+        return vehicleService.getAll();
+    }
+
+    public String delete(String vin) {
+        vehicleService.removeWithRentals(vin);
+        return "vehicles.xhtml?faces-redirect=true";
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\view\converter\UserConverter.java:
+<code>
+package com.hil4ri0n.carrental.view.converter;
+
+import com.hil4ri0n.carrental.model.User;
+import com.hil4ri0n.carrental.service.UserService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.convert.Converter;
+import jakarta.faces.convert.FacesConverter;
+import jakarta.inject.Inject;
+
+import java.util.Optional;
+import java.util.UUID;
+
+@FacesConverter(value = "userConverter", managed = true)
+@ApplicationScoped
+public class UserConverter implements Converter<User> {
+
+    @Inject
+    private UserService userService;
+
+    @Override
+    public User getAsObject(FacesContext context, UIComponent component, String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+        try {
+            UUID id = UUID.fromString(value);
+            Optional<User> opt = userService.getUserById(id);
+            return opt.orElse(null);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public String getAsString(FacesContext context, UIComponent component, User value) {
+        if (value == null) {
+            return "";
+        }
+        return value.getId().toString();
+    }
+}
+
+</code>
+
+src\main\java\com\hil4ri0n\carrental\view\converter\VehicleConverter.java:
+<code>
+package com.hil4ri0n.carrental.view.converter;
+
+import com.hil4ri0n.carrental.model.Vehicle;
+import com.hil4ri0n.carrental.service.VehicleService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.convert.Converter;
+import jakarta.faces.convert.FacesConverter;
+import jakarta.inject.Inject;
+
+import java.util.Optional;
+
+@FacesConverter(value = "vehicleConverter", managed = true)
+@ApplicationScoped
+public class VehicleConverter implements Converter<Vehicle> {
+
+    @Inject
+    private VehicleService vehicleService;
+
+    @Override
+    public Vehicle getAsObject(FacesContext context, UIComponent component, String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+        Optional<Vehicle> opt = vehicleService.getByVin(value);
+        return opt.orElse(null);
+    }
+
+    @Override
+    public String getAsString(FacesContext context, UIComponent component, Vehicle value) {
+        if (value == null) {
+            return "";
+        }
+        return value.getVin();
+    }
+}
+
+</code>
+
+src\main\liberty\config\server.xml:
+<code>
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="Car Rental Server">
+    <featureManager>
+        <feature>servlet-6.0</feature>
+        <feature>jsonb-3.0</feature>
+        <feature>cdi-4.0</feature>
+        <feature>faces-4.0</feature>
+        <feature>restfulWS-3.1</feature>
+    </featureManager>
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  httpPort="9080"
+                  httpsPort="9443" />
+
+    <webApplication location="car-rental-1.0-SNAPSHOT.war" contextRoot="/car-rental"/>
+</server>
+
+</code>
+
+src\main\resources\META-INF\beans.xml:
+<code>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="https://jakarta.ee/xml/ns/jakartaee"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/beans_4_1.xsd">
+
+</beans>
+</code>
+
+src\main\resources\META-INF\persistence.xml:
+<code>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
+             version="3.2">
+    <persistence-unit name="default">
+
+    </persistence-unit>
+</persistence>
+
+</code>
+
+src\main\webapp\resources\css\style.css:
+<code>
+:root {
+    --bg: #fafafa;
+    --primary: #16325c;
+    --accent: #2d6cdf;
+    --muted: #666;
+    --card: #ffffff;
+    --border: #e7e7e7;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: #111;
+}
+
+.layout {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    min-height: 100vh;
+}
+
+.topbar {
+    background: var(--primary);
+    color: #fff;
+    padding: 12px 20px;
+    font-weight: 600;
+}
+
+.header {
+    background: url("#{request.contextPath}/resources/images/header.jpg") center/cover no-repeat;
+    min-height: 160px;
+    display: flex;
+    align-items: end;
+    padding: 16px 20px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,.5);
+}
+
+.nav {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+}
+
+.nav a {
+    text-decoration: none;
+    margin-right: 16px;
+    color: var(--primary);
+}
+
+.container {
+    padding: 20px;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.footer {
+    border-top: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    padding: 14px 20px;
+    font-size: 14px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.table th, .table td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    text-align: left;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+</code>
+
+src\main\webapp\WEB-INF\web.xml:
+<code>
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+    <context-param>
+        <param-name>avatarDir</param-name>
+        <param-value>avatars</param-value>
+    </context-param>
+
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.xhtml</welcome-file>
+    </welcome-file-list>
+</web-app>
+</code>
+

@@ -36,7 +36,6 @@ public class VehicleRepository {
     }
 
     public void save(Vehicle vehicle) {
-        // jeśli nie ma ID – nadaj
         if (vehicle.getId() == null) {
             vehicle.setId(UUID.randomUUID());
         }

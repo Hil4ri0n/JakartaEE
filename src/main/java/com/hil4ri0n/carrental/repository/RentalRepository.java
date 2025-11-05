@@ -32,22 +32,22 @@ public class RentalRepository {
         return Optional.ofNullable(rentals.get(id));
     }
 
-    public List<Rental> findByVehicleBrand(String brand) {
-        List<Rental> out = new ArrayList<>();
-        for (Rental r : rentals.values()) {
-            if (r.getVehicle() != null && brand.equals(r.getVehicle().getBrand())) {
-                out.add(r);
-            }
-        }
-        return out;
-    }
-
-    public void deleteByVehicleBrand(String brand) {
-        rentals.values().removeIf(r ->
-                r.getVehicle() != null && r.getVehicle().getBrand().equals(brand));
-    }
-
     public void update(Rental rental) {
         rentals.put(rental.getId(), rental);
+    }
+
+    public List<Rental> findByVin(String vin) {
+        return rentals.values().stream()
+                .filter(r -> r.getVehicle() != null
+                        && vin != null
+                        && vin.equalsIgnoreCase(r.getVehicle().getVin()))
+                .toList();
+    }
+
+    public Optional<Rental> findByIdAndVin(UUID id, String vin) {
+        return Optional.ofNullable(rentals.get(id))
+                .filter(r -> r.getVehicle() != null
+                        && vin != null
+                        && vin.equalsIgnoreCase(r.getVehicle().getVin()));
     }
 }

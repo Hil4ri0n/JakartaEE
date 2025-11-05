@@ -46,7 +46,7 @@ public class StartupRunner {
         rental.setStatus(RentalStatus.CREATED);
         rental.setPrice(new BigDecimal("900.00"));
 
-        rentalService.add(rental);
+        rentalService.createRental(rental);
 
         System.out.println("Vehicles:");
         vehicleService.getAll()

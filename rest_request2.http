@@ -1,0 +1,36 @@
+### Get rentals by VIN
+GET http://localhost:9080/car-rental/api/vehicles/VIN001/rentals
+Accept: application/json
+
+### Get rental of a single vehicle by id
+GET http://localhost:9080/car-rental/api/vehicles/VIN001/rentals/b26485d1-688d-4d89-8ca3-a5b3cf9200e9
+Accept: application/json
+
+### Create a rental for a chosen vehicle
+POST http://localhost:9080/car-rental/api/vehicles/VIN001/rentals
+Content-Type: application/json
+Accept: application/json
+
+{
+  "startAt": "2025-11-05T12:00:00",
+  "endAt": "2025-11-07T10:00:00",
+  "price": 450.00
+}
+
+### Update rental
+PUT http://localhost:9080/car-rental/api/vehicles/VIN001/rentals/b26485d1-688d-4d89-8ca3-a5b3cf9200e9
+Content-Type: application/json
+Accept: application/json
+
+{
+  "startAt": "2025-11-06T08:00:00",
+  "endAt": "2025-11-08T08:00:00",
+  "price": 500.00,
+  "status": "ACTIVE"
+}
+
+### Delete a rental
+DELETE http://localhost:9080/car-rental/api/vehicles/VIN001/rentals/b26485d1-688d-4d89-8ca3-a5b3cf9200e9
+
+### Delete all rentals for a vehicle
+DELETE http://localhost:9080/car-rental/api/vehicles/VIN001/rentals

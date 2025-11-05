@@ -22,7 +22,7 @@ public class VehicleService {
         this.rentalService = rentalService;
     }
 
-    public void add(Vehicle vehicle) {
+    public void create(Vehicle vehicle) {
         vehicleRepository.save(vehicle);
     }
 
@@ -34,7 +34,7 @@ public class VehicleService {
         return vehicleRepository.findByVin(vin);
     }
 
-    public void removeWithRentals(String vin) {
+    public void deleteVehicle(String vin) {
         rentalService.deleteByVehicleVin(vin);
         vehicleRepository.deleteByVin(vin);
     }
