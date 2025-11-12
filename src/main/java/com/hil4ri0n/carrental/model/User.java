@@ -1,5 +1,7 @@
 package com.hil4ri0n.carrental.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.json.bind.annotation.JsonbTransient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,5 +23,8 @@ public class User {
     private String email;
     private String login;
     private LocalDate joinedAt;
+
+    @JsonbTransient
+    @JsonIgnore
     private List<Rental> rentals = new ArrayList<>();
 }

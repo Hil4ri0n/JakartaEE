@@ -1,8 +1,10 @@
 package com.hil4ri0n.carrental.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hil4ri0n.carrental.model.enums.FuelType;
 import com.hil4ri0n.carrental.model.enums.Transmission;
 import com.hil4ri0n.carrental.model.enums.VehicleStatus;
+import jakarta.json.bind.annotation.JsonbTransient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,5 +32,8 @@ public class Vehicle {
     private Transmission transmission;
     private VehicleStatus status;
     private BigDecimal dailyRate;
+
+    @JsonbTransient
+    @JsonIgnore
     private List<Rental> rentals = new ArrayList<>();
 }

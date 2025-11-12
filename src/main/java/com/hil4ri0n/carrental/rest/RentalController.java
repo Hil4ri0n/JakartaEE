@@ -35,7 +35,7 @@ public class RentalController {
         if (vehicle.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        List<Rental> list = rentalService.getByVehicleVin(vin);
+        List<Rental> list = vehicle.get().getRentals();
         return Response.ok(list).build();
     }
 

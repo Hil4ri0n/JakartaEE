@@ -43,7 +43,7 @@ public class VehicleDetailView implements Serializable {
     }
 
     private void refreshRentals() {
-        rentals = rentalService.getByVehicleVin(vin);
+        rentals = vehicle.getRentals();
     }
 
     public Vehicle getVehicle() {
