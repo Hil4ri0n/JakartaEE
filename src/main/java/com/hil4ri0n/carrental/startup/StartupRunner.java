@@ -43,7 +43,6 @@ public class StartupRunner {
             return;
         }
 
-        // === 1. Tworzymy przykładowe pojazdy ===
         Vehicle tesla = new Vehicle();
         tesla.setVin("VIN-101");
         tesla.setBrand("Tesla");
@@ -81,7 +80,6 @@ public class StartupRunner {
         vehicleService.create(toyota);
         vehicleService.create(bmw);
 
-        // === 2. Bierzemy przykładowych użytkowników z pamięci ===
         List<User> users = userService.getAllUsers();
         if (users.size() < 2) {
             System.out.println("Za mało użytkowników do utworzenia przykładowych wypożyczeń.");
@@ -89,10 +87,9 @@ public class StartupRunner {
             User user1 = users.get(0);
             User user2 = users.get(1);
 
-            // === 3. Tworzymy przykładowe wypożyczenia ===
             Rental r1 = new Rental();
             r1.setVehicle(tesla);
-            r1.setUser(user1); // @Transient – nie idzie do bazy, ale mamy to w pamięci
+            r1.setUser(user1); 
             r1.setStartAt(LocalDateTime.of(2025, 11, 1, 10, 0));
             r1.setEndAt(LocalDateTime.of(2025, 11, 4, 10, 0));
             r1.setStatus(RentalStatus.ACTIVE);
@@ -109,7 +106,6 @@ public class StartupRunner {
             rentalService.createRental(r2);
         }
 
-        // === 4. Prosty log na konsolę – analogicznie do kolegi ===
         System.out.println("Vehicles:");
         for (var v : vehicleService.getAll()) {
             System.out.println("VIN: " + v.getVin());
