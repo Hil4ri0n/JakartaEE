@@ -1,6 +1,16 @@
 package com.hil4ri0n.carrental.model;
 
 import com.hil4ri0n.carrental.model.enums.RentalStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,17 +21,36 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Entity
+@Table(name = "rentals")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class Rental {
+
+    @Id
+    @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
+
+    @Transient
     private User user;
+
+    @Column(name = "start_at")
     private LocalDateTime startAt;
+
+    @Column(name = "end_at")
     private LocalDateTime endAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
     private RentalStatus status;
+
+    @Column(name = "price", precision = 19, scale = 2)
     private BigDecimal price;
 }

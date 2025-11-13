@@ -2,52 +2,90 @@ package com.hil4ri0n.carrental.repository;
 
 import com.hil4ri0n.carrental.model.Rental;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
 public class RentalRepository {
-    private final Map<UUID, Rental> rentals = new HashMap<>();
 
+    @PersistenceContext
+    private EntityManager em;
+
+    @Transactional
     public void save(Rental rental) {
-        UUID id = UUID.randomUUID();
-        rental.setId(id);
-        rentals.put(id, rental);
+        if (rental.getId() == null) {
+            rental.setId(UUID.randomUUID());
+            em.persist(rental);
+        } else {
+            em.merge(rental);
+        }
     }
 
     public List<Rental> findAll() {
-        return new ArrayList<>(rentals.values());
-    }
-
-    public void deleteById(UUID id) {
-        rentals.remove(id);
+        return em.createQuery("SELECT r FROM Rental r", Rental.class)
+                .getResultList();
     }
 
     public Optional<Rental> findById(UUID id) {
-        return Optional.ofNullable(rentals.get(id));
+        return Optional.ofNullable(em.find(Rental.class, id));
     }
 
+    @Transactional
+    public void deleteById(UUID id) {
+        Rental managed = em.find(Rental.class, id);
+        if (managed != null) {
+            em.remove(managed);
+        }
+    }
+
+    @Transactional
     public void update(Rental rental) {
-        rentals.put(rental.getId(), rental);
+        em.merge(rental);
     }
 
     public List<Rental> findByVin(String vin) {
-        return rentals.values().stream()
-                .filter(r -> r.getVehicle() != null
-                        && vin != null
-                        && vin.equalsIgnoreCase(r.getVehicle().getVin()))
-                .toList();
+        if (vin == null) {
+            return List.of();
+        }
+
+        return em.createQuery(
+                        "SELECT r FROM Rental r " +
+                                "WHERE UPPER(r.vehicle.vin) = UPPER(:vin)",
+                        Rental.class)
+                .setParameter("vin", vin)
+                .getResultList();
     }
 
     public Optional<Rental> findByIdAndVin(UUID id, String vin) {
-        return Optional.ofNullable(rentals.get(id))
-                .filter(r -> r.getVehicle() != null
-                        && vin != null
-                        && vin.equalsIgnoreCase(r.getVehicle().getVin()));
+        if (id == null || vin == null) {
+            return Optional.empty();
+        }
+
+        List<Rental> result = em.createQuery(
+                        "SELECT r FROM Rental r " +
+                                "WHERE r.id = :id AND UPPER(r.vehicle.vin) = UPPER(:vin)",
+                        Rental.class)
+                .setParameter("id", id)
+                .setParameter("vin", vin)
+                .getResultList();
+
+        return result.stream().findFirst();
+    }
+
+    @Transactional
+    public int deleteByVehicleVin(String vin) {
+        if (vin == null) {
+            return 0;
+        }
+
+        return em.createQuery(
+                        "DELETE FROM Rental r WHERE UPPER(r.vehicle.vin) = UPPER(:vin)")
+                .setParameter("vin", vin)
+                .executeUpdate();
     }
 }

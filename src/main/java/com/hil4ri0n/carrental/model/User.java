@@ -24,6 +24,7 @@ public class User {
     private String login;
     private LocalDate joinedAt;
 
+    @Builder.Default
     @JsonbTransient
     @JsonIgnore
     private List<Rental> rentals = new ArrayList<>();
