@@ -1,0 +1,215 @@
+### 0. Nieautoryzowany dostęp – powinno zwrócić 401
+GET http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles
+Accept: application/json
+
+### 1.1 Rejestracja nowego użytkownika (bez autoryzacji)
+POST http://localhost:9080/car-rental-1.0-SNAPSHOT/api/users/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "login": "charlie",
+  "email": "charlie@example.com",
+  "password": "charlie123"
+}
+
+
+### 2.1 USER (alice) – pobieranie wszystkich pojazdów (dozwolone)
+GET http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles
+Accept: application/json
+Authorization: Basic YWxpY2U6YWxpY2UxMjM=
+
+
+### 2.2 USER (alice) – próba dodania pojazdu (powinno zwrócić 403)
+POST http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic YWxpY2U6YWxpY2UxMjM=
+
+{
+  "vin": "VIN-999",
+  "brand": "Ford",
+  "model": "Focus",
+  "fuel": "PETROL",
+  "transmission": "MANUAL",
+  "status": "AVAILABLE",
+  "dailyRate": 120.00
+}
+
+
+### 2.3 ADMIN (bob) – dodanie nowego pojazdu (dozwolone)
+POST http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic Ym9iOmJvYjEyMw==
+
+{
+  "vin": "VIN-999",
+  "brand": "Ford",
+  "model": "Focus",
+  "fuel": "PETROL",
+  "transmission": "MANUAL",
+  "status": "AVAILABLE",
+  "dailyRate": 120.00
+}
+
+### test post
+POST http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles
+Authorization: Basic ZWpiYWRtaW46c2VjcmV0
+Content-Type: application/json
+Accept: application/json
+
+{
+"vin": "VIN-999",
+"brand": "Ford",
+"model": "Focus",
+"fuel": "PETROL",
+"transmission": "MANUAL",
+"status": "AVAILABLE",
+"dailyRate": 120.00
+}
+
+
+### 2.4 ADMIN (bob) – pobranie pojedynczego pojazdu VIN-999
+GET http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-101
+Accept: application/json
+Authorization: Basic Ym9iOmJvYjEyMw==
+
+
+### 2.5 ADMIN (bob) – edycja pojazdu VIN-999
+PUT http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-101
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic Ym9iOmJvYjEyMw==
+
+{
+  "vin": "VIN-999",
+  "brand": "Ford",
+  "model": "Focus ST",
+  "fuel": "PETROL",
+  "transmission": "MANUAL",
+  "status": "AVAILABLE",
+  "dailyRate": 150.00
+}
+
+
+### 2.6 ADMIN (bob) – usunięcie pojazdu VIN-999
+DELETE http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-101
+Accept: application/json
+Authorization: Basic Ym9iOmJvYjEyMw==
+
+
+### 3.1 ADMIN (bob) – pobranie wszystkich rentalów dla VIN-101
+GET http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-103/rentals
+Accept: application/json
+Authorization: Basic Ym9iOmJvYjEyMw==
+
+### 3.2 USER (alice) – pobranie rentalów dla VIN-101
+GET http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-103/rentals
+Accept: application/json
+Authorization: Basic YWxpY2U6YWxpY2UxMjM=
+
+### 3.3 USER (charlie) – brak wypożyczeń dla VIN-101 (powinna być pusta lista)
+GET http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-101/rentals
+Accept: application/json
+Authorization: Basic Y2hhcmxpZTpjaGFybGllMTIz
+
+### 3.4 USER (alice) – pobranie pojedynczego wypożyczenia VIN-101 / {{ALICE_RENTAL_ID}}
+GET http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-101/rentals/{{ALICE_RENTAL_ID}}
+Accept: application/json
+Authorization: Basic YWxpY2U6YWxpY2UxMjM=   # alice:alice123
+
+### 3.5 USER (charlie) – próba podejrzenia cudzego rentalu (powinno zwrócić 404)
+GET http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-101/rentals/{{ALICE_RENTAL_ID}}
+Accept: application/json
+Authorization: Basic Y2hhcmxpZTpjaGFybGllMTIz   # charlie:charlie123
+
+### 3.6 USER (alice) – stworzenie nowego wypożyczenia dla VIN-102
+POST http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-102/rentals
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic YWxpY2U6YWxpY2UxMjM=   # alice:alice123
+
+{
+  "startAt": "2025-11-21T10:00:00",
+  "endAt": "2025-11-23T10:00:00",
+  "status": "CREATED",
+  "price": 600.00
+}
+
+### 3.7 USER (alice) – aktualizacja własnego rentalu VIN-102 / {{ALICE_NEW_RENTAL_ID}}
+PUT http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-102/rentals/{{ALICE_NEW_RENTAL_ID}}
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic YWxpY2U6YWxpY2UxMjM=   # alice:alice123
+
+{
+  "startAt": "2025-11-22T09:00:00",
+  "endAt": "2025-11-25T09:00:00",
+  "status": "ACTIVE",
+  "price": 900.00
+}
+
+
+
+### 3.8 USER (charlie) – próba edycji rentalu alice (powinno zwrócić 404)
+PUT http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-102/rentals/{{ALICE_NEW_RENTAL_ID}}
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic Y2hhcmxpZTpjaGFybGllMTIz   # charlie:charlie123
+
+{
+  "startAt": "2025-11-22T09:00:00",
+  "endAt": "2025-11-26T09:00:00",
+  "status": "CANCELED",
+  "price": 500.00
+}
+
+
+
+### 3.9 USER (alice) – usunięcie własnego rentalu VIN-102 / {{ALICE_NEW_RENTAL_ID}}
+DELETE http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-102/rentals/{{ALICE_NEW_RENTAL_ID}}
+Accept: application/json
+Authorization: Basic YWxpY2U6YWxpY2UxMjM=   # alice:alice123
+
+
+
+### 3.10 ADMIN (bob) – pobranie rentalu bob’a dla VIN-103
+GET http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-103/rentals
+Accept: application/json
+Authorization: Basic Ym9iOmJvYjEyMw==
+
+
+
+
+### 3.11 USER (alice) – próba zobaczenia rentalu bob’a (powinna być pusta lista)
+GET http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-103/rentals
+Accept: application/json
+Authorization: Basic YWxpY2U6YWxpY2UxMjM=   # alice:alice123
+
+
+
+### 3.12 ADMIN (bob) – edycja rentalu bob’a VIN-103 / {{BOB_RENTAL_ID}}
+PUT http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-103/rentals/f234a509-f9e6-4180-8f55-adf9ed7bafd4
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic Ym9iOmJvYjEyMw==       # bob:bob123
+
+{
+  "startAt": "2025-12-11T09:00:00",
+  "endAt": "2025-12-16T09:00:00",
+  "status": "ACTIVE",
+  "price": 2100.00
+}
+
+### 3.13 ADMIN (bob) – usunięcie pojedynczego rentalu VIN-103 / {{BOB_RENTAL_ID}}
+DELETE http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-103/rentals/f234a509-f9e6-4180-8f55-adf9ed7bafd4
+Accept: application/json
+Authorization: Basic Ym9iOmJvYjEyMw==       # bob:bob123
+
+
+
+### 3.14 ADMIN (bob) – usunięcie wszystkich rentali dla pojazdu VIN-101
+DELETE http://localhost:9080/car-rental-1.0-SNAPSHOT/api/vehicles/VIN-101/rentals
+Accept: application/json
+Authorization: Basic Ym9iOmJvYjEyMw==       # bob:bob123

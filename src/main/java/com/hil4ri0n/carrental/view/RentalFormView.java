@@ -8,6 +8,7 @@ import com.hil4ri0n.carrental.service.RentalService;
 import com.hil4ri0n.carrental.service.UserService;
 import com.hil4ri0n.carrental.service.VehicleService;
 import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -24,13 +25,13 @@ import java.util.UUID;
 @ViewScoped
 public class RentalFormView implements Serializable {
 
-    @Inject
+    @EJB
     private RentalService rentalService;
 
-    @Inject
+    @EJB
     private VehicleService vehicleService;
 
-    @Inject
+    @EJB
     private UserService userService;
 
     private Rental rental;

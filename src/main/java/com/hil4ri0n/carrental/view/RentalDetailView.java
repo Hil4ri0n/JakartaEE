@@ -3,6 +3,7 @@ package com.hil4ri0n.carrental.view;
 import com.hil4ri0n.carrental.model.Rental;
 import com.hil4ri0n.carrental.service.RentalService;
 import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @ViewScoped
 public class RentalDetailView implements Serializable {
 
-    @Inject
+    @EJB
     private RentalService rentalService;
 
     private String id;

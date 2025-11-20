@@ -1,9 +1,11 @@
 package com.hil4ri0n.carrental.rest;
 
+import com.hil4ri0n.carrental.model.UserRoles;
 import com.hil4ri0n.carrental.model.Vehicle;
 import com.hil4ri0n.carrental.service.VehicleService;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -19,13 +21,14 @@ import java.util.List;
 @RequestScoped
 public class VehicleController {
 
-    @Inject
+    @EJB
     VehicleService vehicleService;
 
     @Context
     UriInfo uriInfo;
 
     @GET
+    @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public Response getAll() {
         List<Vehicle> all = vehicleService.getAll();
         return Response.ok(all).build();
@@ -33,6 +36,7 @@ public class VehicleController {
 
     @GET
     @Path("{vin}")
+    @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public Response getOne(@PathParam("vin") String vin) {
         return vehicleService.getByVin(vin)
                 .map(v -> Response.ok(v).build())
@@ -40,6 +44,7 @@ public class VehicleController {
     }
 
     @POST
+    @RolesAllowed(UserRoles.ADMIN)
     public Response create(Vehicle vehicle) {
         if (vehicle == null || vehicle.getVin() == null || vehicle.getVin().isBlank()) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -60,6 +65,7 @@ public class VehicleController {
 
     @PUT
     @Path("{vin}")
+    @RolesAllowed(UserRoles.ADMIN)
     public Response update(@PathParam("vin") String vin, Vehicle vehicle) {
         var existing = vehicleService.getByVin(vin);
         if (existing.isEmpty()) {
@@ -77,6 +83,7 @@ public class VehicleController {
 
     @DELETE
     @Path("{vin}")
+    @RolesAllowed(UserRoles.ADMIN)
     public Response delete(@PathParam("vin") String vin) {
         if (vehicleService.getByVin(vin).isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();

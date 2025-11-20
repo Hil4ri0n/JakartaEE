@@ -2,6 +2,7 @@ package com.hil4ri0n.carrental.startup;
 
 import com.hil4ri0n.carrental.model.Rental;
 import com.hil4ri0n.carrental.model.User;
+import com.hil4ri0n.carrental.model.UserRoles;
 import com.hil4ri0n.carrental.model.Vehicle;
 import com.hil4ri0n.carrental.model.enums.FuelType;
 import com.hil4ri0n.carrental.model.enums.RentalStatus;
@@ -11,11 +12,10 @@ import com.hil4ri0n.carrental.service.RentalService;
 import com.hil4ri0n.carrental.service.UserService;
 import com.hil4ri0n.carrental.service.VehicleService;
 
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Initialized;
 import jakarta.enterprise.event.Observes;
-import jakarta.inject.Inject;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,19 +23,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
-@NoArgsConstructor(force = true)
 public class StartupRunner {
 
-    private final VehicleService vehicleService;
-    private final RentalService rentalService;
-    private final UserService userService;
-
-    @Inject
-    public StartupRunner(VehicleService vehicleService, RentalService rentalService, UserService userService) {
-        this.vehicleService = vehicleService;
-        this.rentalService = rentalService;
-        this.userService = userService;
-    }
+    @EJB
+    private VehicleService vehicleService;
+    @EJB
+    private RentalService rentalService;
+    @EJB
+    private UserService userService;
 
     public void onStart(@Observes @Initialized(ApplicationScoped.class) Object event) {
 
@@ -43,7 +38,7 @@ public class StartupRunner {
             return;
         }
 
-        // === 1. Tworzymy przykładowe pojazdy ===
+        // === Pojazdy ===
         Vehicle tesla = new Vehicle();
         tesla.setVin("VIN-101");
         tesla.setBrand("Tesla");
@@ -81,7 +76,23 @@ public class StartupRunner {
         vehicleService.create(toyota);
         vehicleService.create(bmw);
 
-        // === 2. Bierzemy przykładowych użytkowników z pamięci ===
+        // === użytkownicy ===
+        User alice = User.builder()
+                .login("alice")
+                .email("alice@example.com")
+                .password("alice123")
+                .role(UserRoles.USER)
+                .build();
+        userService.registerUser(alice);
+
+        User bob = User.builder()
+                .login("bob")
+                .email("bob@example.com")
+                .password("bob123")
+                .role(UserRoles.ADMIN)
+                .build();
+        userService.registerUser(bob);
+
         List<User> users = userService.getAllUsers();
         if (users.size() < 2) {
             System.out.println("Za mało użytkowników do utworzenia przykładowych wypożyczeń.");
@@ -89,10 +100,10 @@ public class StartupRunner {
             User user1 = users.get(0);
             User user2 = users.get(1);
 
-            // === 3. Tworzymy przykładowe wypożyczenia ===
+            // === Wypożyczenia ===
             Rental r1 = new Rental();
             r1.setVehicle(tesla);
-            r1.setUser(user1); // @Transient – nie idzie do bazy, ale mamy to w pamięci
+            r1.setUser(user1);
             r1.setStartAt(LocalDateTime.of(2025, 11, 1, 10, 0));
             r1.setEndAt(LocalDateTime.of(2025, 11, 4, 10, 0));
             r1.setStatus(RentalStatus.ACTIVE);
@@ -109,7 +120,7 @@ public class StartupRunner {
             rentalService.createRental(r2);
         }
 
-        // === 4. Prosty log na konsolę – analogicznie do kolegi ===
+        // === Log ===
         System.out.println("Vehicles:");
         for (var v : vehicleService.getAll()) {
             System.out.println("VIN: " + v.getVin());

@@ -2,6 +2,7 @@ package com.hil4ri0n.carrental.view.converter;
 
 import com.hil4ri0n.carrental.model.User;
 import com.hil4ri0n.carrental.service.UserService;
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @ApplicationScoped
 public class UserConverter implements Converter<User> {
 
-    @Inject
+    @EJB
     private UserService userService;
 
     @Override

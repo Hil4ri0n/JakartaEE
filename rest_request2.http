@@ -3,34 +3,45 @@ GET http://localhost:9080/car-rental/api/vehicles/VIN-101/rentals
 Accept: application/json
 
 ### Get rental of a single vehicle by id
-GET http://localhost:9080/car-rental/api/vehicles/VIN001/rentals/b26485d1-688d-4d89-8ca3-a5b3cf9200e9
+GET http://localhost:9080/car-rental/api/vehicles/VIN-101/rentals/9fa5d48c-c7c9-4763-8f8b-29a257b5e7c9
 Accept: application/json
 
-### Create a rental for a chosen vehicle
-POST http://localhost:9080/car-rental/api/vehicles/VIN-101/rentals
+### Register new user
+POST http://localhost:9080/car-rental/api/users/register
 Content-Type: application/json
 Accept: application/json
 
 {
-  "startAt": "2025-11-05T12:00:00",
-  "endAt": "2025-11-07T10:00:00",
-  "price": 450.00
+  "login": "newuser",
+  "email": "newuser@example.com"
+}
+
+### Create a rental for a chosen vehicle
+POST http://localhost:9080/car-rental/api/vehicles/VIN-101/rentals?userId=9997311c-bc97-47d1-9d94-08420e7c2d31
+Content-Type: application/json
+Accept: application/json
+
+{
+  "startAt": "2025-11-21T10:00:00",
+  "endAt": "2025-11-23T10:00:00",
+  "status": "CREATED",
+  "price": 600.00
 }
 
 ### Update rental
-PUT http://localhost:9080/car-rental/api/vehicles/VIN-101/rentals/f01f2abe-23ba-4809-bc0f-d7097589d65f
+PUT http://localhost:9080/car-rental/api/vehicles/VIN-101/rentals/8efc4246-10c1-433d-84da-eb34b72a52b7?userId=9997311c-bc97-47d1-9d94-08420e7c2d31
 Content-Type: application/json
 Accept: application/json
 
 {
-  "startAt": "2025-11-06T08:00:00",
-  "endAt": "2025-11-08T08:00:00",
-  "price": 500.00,
-  "status": "ACTIVE"
+  "startAt": "2025-11-22T09:00:00",
+  "endAt": "2025-11-25T09:00:00",
+  "status": "ACTIVE",
+  "price": 900.00
 }
 
 ### Delete a rental
-DELETE http://localhost:9080/car-rental/api/vehicles/VIN-101/rentals/f01f2abe-23ba-4809-bc0f-d7097589d65f
+DELETE http://localhost:9080/car-rental/api/vehicles/VIN-101/rentals/8efc4246-10c1-433d-84da-eb34b72a52b7
 
 ### Delete all rentals for a vehicle
-DELETE http://localhost:9080/car-rental/api/vehicles/VIN001/rentals
+DELETE http://localhost:9080/car-rental/api/vehicles/VIN-101/rentals

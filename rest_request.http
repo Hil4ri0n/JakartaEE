@@ -37,5 +37,7 @@ Accept: application/json
 }
 
 ### Delete a vehicle by vin
-DELETE http://localhost:9080/car-rental/api/vehicles/VIN001
+DELETE http://localhost:9080/car-rental/api/vehicles/VIN123
+
+
 

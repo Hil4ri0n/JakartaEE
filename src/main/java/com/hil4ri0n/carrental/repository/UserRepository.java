@@ -2,41 +2,64 @@ package com.hil4ri0n.carrental.repository;
 
 import com.hil4ri0n.carrental.model.User;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
 public class UserRepository {
-    private final Map<UUID, User> users = new HashMap<>();
 
-    public UserRepository() {
-        addTestUsers();
-    }
-
-    private void addTestUsers() {
-        save(User.builder().login("Alice").email("alice@example.com").build());
-        save(User.builder().login("Bob").email("bob@example.com").build());
-        save(User.builder().login("Charlie").email("charlie@example.com").build());
-        save(User.builder().login("Diana").email("diana@example.com").build());
-    }
+    @PersistenceContext
+    private EntityManager em;
 
     public List<User> findAll() {
-        return new ArrayList<>(users.values());
+        return em.createQuery("SELECT u FROM User u", User.class)
+                .getResultList();
     }
 
     public Optional<User> findById(UUID id) {
-        return Optional.ofNullable(users.get(id));
+        return Optional.ofNullable(em.find(User.class, id));
     }
 
+    public Optional<User> findByLogin(String login) {
+        if (login == null) {
+            return Optional.empty();
+        }
+        var result = em.createQuery(
+                        "SELECT u FROM User u WHERE UPPER(u.login) = UPPER(:login)",
+                        User.class)
+                .setParameter("login", login)
+                .getResultList();
+        return result.stream().findFirst();
+    }
+
+    public Optional<User> findByEmail(String email) {
+        if (email == null) {
+            return Optional.empty();
+        }
+        var result = em.createQuery(
+                        "SELECT u FROM User u WHERE UPPER(u.email) = UPPER(:email)",
+                        User.class)
+                .setParameter("email", email)
+                .getResultList();
+        return result.stream().findFirst();
+    }
+
+    @Transactional
     public void save(User user) {
-        user.setId(UUID.randomUUID());
-        user.setJoinedAt(LocalDate.now());
-        users.put(user.getId(), user);
+        if (user.getId() == null) {
+            user.setId(UUID.randomUUID());
+            if (user.getJoinedAt() == null) {
+                user.setJoinedAt(LocalDate.now());
+            }
+            em.persist(user);
+        } else {
+            em.merge(user);
+        }
     }
 }

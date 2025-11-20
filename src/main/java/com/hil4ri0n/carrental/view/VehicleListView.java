@@ -2,6 +2,7 @@ package com.hil4ri0n.carrental.view;
 
 import com.hil4ri0n.carrental.model.Vehicle;
 import com.hil4ri0n.carrental.service.VehicleService;
+import jakarta.ejb.EJB;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -13,7 +14,7 @@ import java.util.List;
 @ViewScoped
 public class VehicleListView implements Serializable {
 
-    @Inject
+    @EJB
     private VehicleService vehicleService;
 
     public List<Vehicle> getVehicles() {

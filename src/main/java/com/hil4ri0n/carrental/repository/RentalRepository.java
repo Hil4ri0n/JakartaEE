@@ -88,4 +88,50 @@ public class RentalRepository {
                 .setParameter("vin", vin)
                 .executeUpdate();
     }
+
+    public List<Rental> findByVinAndUserLogin(String vin, String login) {
+        if (vin == null || login == null) {
+            return List.of();
+        }
+
+        return em.createQuery(
+                        "SELECT r FROM Rental r " +
+                                "WHERE UPPER(r.vehicle.vin) = UPPER(:vin) " +
+                                "AND UPPER(r.user.login) = UPPER(:login)",
+                        Rental.class)
+                .setParameter("vin", vin)
+                .setParameter("login", login)
+                .getResultList();
+    }
+
+    public Optional<Rental> findByIdVinAndUserLogin(UUID id, String vin, String login) {
+        if (id == null || vin == null || login == null) {
+            return Optional.empty();
+        }
+
+        List<Rental> result = em.createQuery(
+                        "SELECT r FROM Rental r " +
+                                "WHERE r.id = :id " +
+                                "AND UPPER(r.vehicle.vin) = UPPER(:vin) " +
+                                "AND UPPER(r.user.login) = UPPER(:login)",
+                        Rental.class)
+                .setParameter("id", id)
+                .setParameter("vin", vin)
+                .setParameter("login", login)
+                .getResultList();
+
+        return result.stream().findFirst();
+    }
+
+    public List<Rental> findByUserLogin(String login) {
+        if (login == null) {
+            return List.of();
+        }
+        return em.createQuery(
+                        "SELECT r FROM Rental r " +
+                                "WHERE UPPER(r.user.login) = UPPER(:login)",
+                        Rental.class)
+                .setParameter("login", login)
+                .getResultList();
+    }
 }
