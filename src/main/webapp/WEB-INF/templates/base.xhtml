@@ -6,7 +6,6 @@
     <title>
         <ui:insert name="title">#{msg['app.title']}</ui:insert>
     </title>
-    <!-- u Ciebie plik nazywa się style.css, zostawiamy to -->
     <h:outputStylesheet library="css" name="style.css"/>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -14,7 +13,6 @@
 <h:body>
     <div class="layout">
 
-        <!-- górny pasek z informacją o zalogowanym użytkowniku -->
         <div class="topbar">
             #{msg['app.title']}
             <span style="float:right">
@@ -27,7 +25,6 @@
             </span>
         </div>
 
-        <!-- nagłówek z dynamicznym obrazkiem -->
         <header class="header">
             <h:graphicImage value="#{resource[securityView.headerImage]}"
                             styleClass="header-img"/>
@@ -39,21 +36,18 @@
             </h1>
         </header>
 
-        <!-- menu nawigacyjne -->
         <nav class="nav">
             <h:link outcome="index" value="#{msg['nav.home']}"/>
             <h:link outcome="vehicles" value="#{msg['nav.vehicles']}"/>
             <h:link outcome="/rental-form" value="#{msg['nav.addRental']}"/>
         </nav>
 
-        <!-- główna zawartość -->
         <main class="container">
             <div class="card">
                 <ui:insert name="content"/>
             </div>
         </main>
 
-        <!-- stopka -->
         <footer class="footer">
             <ui:insert name="footer">
                 #{msg['footer.text']}

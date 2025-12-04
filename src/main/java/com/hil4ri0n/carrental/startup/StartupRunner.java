@@ -35,7 +35,6 @@ public class StartupRunner {
 
     public void onStart(@Observes @Initialized(ApplicationScoped.class) Object event) {
 
-        // UŻYWAMY METODY Z @PermitAll
         if (!vehicleService.getAllInternal().isEmpty()) {
             return;
         }
@@ -74,7 +73,6 @@ public class StartupRunner {
         bmw.setAddedAt(LocalDateTime.now());
         bmw.setDailyRate(new BigDecimal("400.00"));
 
-        // METODY BEZ OGRANICZEŃ RÓL
         vehicleService.createInitial(tesla);
         vehicleService.createInitial(toyota);
         vehicleService.createInitial(bmw);

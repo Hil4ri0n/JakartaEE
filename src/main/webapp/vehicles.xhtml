@@ -12,7 +12,6 @@
 
         <h:panelGroup rendered="#{not empty vehicleListView.vehicles}">
             <h:form id="listForm">
-                <!-- fragment odświeżany AJAX-em -->
                 <h:panelGroup id="vehicleList">
                     <h:dataTable value="#{vehicleListView.vehicles}"
                                  var="v"
@@ -48,7 +47,6 @@
                                     value="#{msg['vehicles.details']}">
                                 <f:param name="vin" value="#{v.vin}"/>
                             </h:link>
-                            <!-- Usuń tylko dla admina, z potwierdzeniem i AJAX-em -->
                             <h:commandLink value="#{msg['vehicles.delete']}"
                                            action="#{vehicleListView.delete(v.vin)}"
                                            rendered="#{securityView.admin}"

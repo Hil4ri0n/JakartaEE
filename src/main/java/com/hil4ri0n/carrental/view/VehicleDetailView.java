@@ -49,7 +49,6 @@ public class VehicleDetailView implements Serializable {
 
     private void refreshRentals() {
         if (vehicle != null && vehicle.getVin() != null) {
-            // ważne: korzystamy z serwisu, który respektuje role i zalogowanego użytkownika
             rentals = rentalService.getByVehicleVin(vehicle.getVin());
         } else {
             rentals = List.of();

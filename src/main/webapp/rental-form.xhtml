@@ -14,12 +14,10 @@
             #{rentalFormView.editMode ? msg['rental.form.title.edit'] : msg['rental.form.title.add']}
         </h2>
 
-        <!-- globalne komunikaty (w tym o konflikcie wersji) -->
         <h:messages globalOnly="true" layout="list" style="color:red"/>
 
         <h:form id="rentalForm">
 
-            <!-- ukryte pole z wersją encji (dla optimistic locking) -->
             <h:inputHidden value="#{rentalFormView.rental.version}"/>
 
             <h:panelGrid columns="2" columnClasses="label,value" styleClass="form">
@@ -70,7 +68,6 @@
                 <h:outputLabel for="price" value="#{msg['rental.form.price']}"/>
                 <h:inputText id="price" value="#{rentalFormView.rental.price}"/>
 
-                <!-- wyświetlenie numeru wersji (tylko informacyjnie) -->
                 <h:outputLabel value="#{msg['rental.form.version']}"/>
                 <h:outputText value="#{rentalFormView.rental.version}"/>
             </h:panelGrid>
@@ -82,7 +79,6 @@
             </div>
         </h:form>
 
-        <!-- BLOK WYŚWIETLANY TYLKO PRZY KONFLIKCIE OPTIMISTIC LOCK -->
         <h:panelGroup rendered="#{rentalFormView.optimisticLockFailed}">
             <hr/>
             <h3 style="color:red">
@@ -90,7 +86,6 @@
             </h3>
             <p>#{msg['rental.form.optimisticLock.info']}</p>
 
-            <!-- stan aktualny z bazy -->
             <h4>#{msg['rental.form.optimisticLock.dbState']}</h4>
             <h:panelGrid columns="2" columnClasses="label,value">
                 <h:outputText value="#{msg['rental.detail.id']}"/>
@@ -123,7 +118,6 @@
                 <h:outputText value="#{rentalFormView.dbRental.price}"/>
             </h:panelGrid>
 
-            <!-- dane wprowadzone przez użytkownika (niezapisane) -->
             <h4>#{msg['rental.form.optimisticLock.userState']}</h4>
             <h:panelGrid columns="2" columnClasses="label,value">
                 <h:outputText value="#{msg['rental.detail.id']}"/>

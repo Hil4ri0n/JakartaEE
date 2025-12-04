@@ -10,7 +10,6 @@
     <ui:define name="content">
         <h2>#{msg['vehicle.detail.title']}</h2>
 
-        <!-- gdy pojazd istnieje -->
         <h:panelGroup rendered="#{not empty vehicleDetailView.vehicle}">
             <p>
                 <b>#{msg['vehicle.detail.vin']} </b>
@@ -37,9 +36,7 @@
 
             <h3>#{msg['vehicle.detail.rentalsHeader']}</h3>
 
-            <!-- FORMULARZ dla listy wynajmów (jak u kolegi dla rezerwacji) -->
             <h:form id="rentalsForm">
-                <!-- fragment odświeżany AJAX-em po usunięciu -->
                 <h:panelGroup id="rentalsList">
                     <h:dataTable value="#{vehicleDetailView.rentals}"
                                  var="r"
@@ -93,12 +90,10 @@
                             <h:commandLink value="#{msg['vehicle.detail.action.delete']}"
                                            action="#{vehicleDetailView.deleteRental(r.id)}"
                                            onclick="return confirm('#{msg['vehicle.detail.confirmDelete']}');">
-                                <!-- AJAX: odśwież tylko listę wynajmów -->
                                 <f:ajax render="rentalsList"/>
                             </h:commandLink>
                         </h:column>
 
-                        <!-- jeśli masz wersję, createdAt, updatedAt w encji Rental -->
                         <h:column>
                             <f:facet name="header">#{msg['vehicle.detail.col.version']}</f:facet>
                             #{r.version}
@@ -130,7 +125,6 @@
             </p>
         </h:panelGroup>
 
-        <!-- gdy pojazd nie istnieje -->
         <h:panelGroup rendered="#{empty vehicleDetailView.vehicle}">
             <p>
                 #{msg['vehicle.detail.notFound']}
