@@ -17,7 +17,7 @@ import java.util.UUID;
 @ApplicationScoped
 public class UserConverter implements Converter<User> {
 
-    @EJB
+    @Inject
     private UserService userService;
 
     @Override

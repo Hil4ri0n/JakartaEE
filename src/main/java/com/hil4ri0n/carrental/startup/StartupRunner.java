@@ -11,11 +11,10 @@ import com.hil4ri0n.carrental.model.enums.VehicleStatus;
 import com.hil4ri0n.carrental.service.RentalService;
 import com.hil4ri0n.carrental.service.UserService;
 import com.hil4ri0n.carrental.service.VehicleService;
-
-import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Initialized;
 import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -25,16 +24,19 @@ import java.util.List;
 @ApplicationScoped
 public class StartupRunner {
 
-    @EJB
+    @Inject
     private VehicleService vehicleService;
-    @EJB
+
+    @Inject
     private RentalService rentalService;
-    @EJB
+
+    @Inject
     private UserService userService;
 
     public void onStart(@Observes @Initialized(ApplicationScoped.class) Object event) {
 
-        if (!vehicleService.getAll().isEmpty()) {
+        // UŻYWAMY METODY Z @PermitAll
+        if (!vehicleService.getAllInternal().isEmpty()) {
             return;
         }
 
@@ -72,9 +74,10 @@ public class StartupRunner {
         bmw.setAddedAt(LocalDateTime.now());
         bmw.setDailyRate(new BigDecimal("400.00"));
 
-        vehicleService.create(tesla);
-        vehicleService.create(toyota);
-        vehicleService.create(bmw);
+        // METODY BEZ OGRANICZEŃ RÓL
+        vehicleService.createInitial(tesla);
+        vehicleService.createInitial(toyota);
+        vehicleService.createInitial(bmw);
 
         // === użytkownicy ===
         User alice = User.builder()
@@ -122,7 +125,7 @@ public class StartupRunner {
 
         // === Log ===
         System.out.println("Vehicles:");
-        for (var v : vehicleService.getAll()) {
+        for (var v : vehicleService.getAllInternal()) {
             System.out.println("VIN: " + v.getVin());
             System.out.println("Brand: " + v.getBrand());
             System.out.println("Model: " + v.getModel());

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hil4ri0n.carrental.model.User;
 import com.hil4ri0n.carrental.service.UserService;
 import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,7 +20,7 @@ import java.util.UUID;
 @WebServlet("/users/*")
 public class UserServlet extends HttpServlet {
 
-    @EJB
+    @Inject
     private UserService userService;
     private ObjectMapper objectMapper;
 

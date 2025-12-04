@@ -17,7 +17,7 @@ import java.util.UUID;
 @ViewScoped
 public class RentalDetailView implements Serializable {
 
-    @EJB
+    @Inject
     private RentalService rentalService;
 
     private String id;

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html">
+<h:head>
+    <title>#{msg['login.error.title']}</title>
+    <h:outputStylesheet library="css" name="style.css"/>
+</h:head>
+<h:body class="layout">
+    <div class="topbar">
+        #{msg['login.error.title']}
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>#{msg['login.error.title']}</h2>
+            <p>#{msg['login.error.message']}</p>
+            <h:link outcome="/login.xhtml"
+                    value="#{msg['login.error.tryAgain']}"/>
+        </div>
+    </div>
+</h:body>
+</html>

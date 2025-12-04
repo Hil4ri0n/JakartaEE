@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html">
+<h:head>
+    <title>#{msg['login.pageTitle']}</title>
+    <h:outputStylesheet library="css" name="style.css"/>
+</h:head>
+<h:body class="layout">
+    <div class="topbar">
+        #{msg['login.pageTitle']}
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>#{msg['login.header']}</h2>
+
+            <!-- standardowy formularz JAAS/Jakarta Security -->
+            <form method="post" action="j_security_check">
+                <table class="form">
+                    <tr>
+                        <td class="label">#{msg['login.username']}</td>
+                        <td class="value"><input type="text" name="j_username"/></td>
+                    </tr>
+                    <tr>
+                        <td class="label">#{msg['login.password']}</td>
+                        <td class="value"><input type="password" name="j_password"/></td>
+                    </tr>
+                </table>
+                <div class="actions" style="margin-top: 12px;">
+                    <input type="submit" value="#{msg['login.submit']}" class="btn"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</h:body>
+</html>

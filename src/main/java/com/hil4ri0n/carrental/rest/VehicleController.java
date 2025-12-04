@@ -6,6 +6,7 @@ import com.hil4ri0n.carrental.service.VehicleService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -21,7 +22,7 @@ import java.util.List;
 @RequestScoped
 public class VehicleController {
 
-    @EJB
+    @Inject
     VehicleService vehicleService;
 
     @Context

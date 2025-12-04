@@ -8,6 +8,7 @@ import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
 import jakarta.faces.convert.FacesConverter;
+import jakarta.inject.Inject;
 
 import java.util.Optional;
 
@@ -15,7 +16,7 @@ import java.util.Optional;
 @ApplicationScoped
 public class VehicleConverter implements Converter<Vehicle> {
 
-    @EJB
+    @Inject
     private VehicleService vehicleService;
 
     @Override

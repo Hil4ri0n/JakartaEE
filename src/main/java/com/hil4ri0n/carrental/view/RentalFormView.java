@@ -8,11 +8,13 @@ import com.hil4ri0n.carrental.service.RentalService;
 import com.hil4ri0n.carrental.service.UserService;
 import com.hil4ri0n.carrental.service.VehicleService;
 import jakarta.annotation.PostConstruct;
-import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.persistence.OptimisticLockException;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -25,19 +27,24 @@ import java.util.UUID;
 @ViewScoped
 public class RentalFormView implements Serializable {
 
-    @EJB
+    @Inject
     private RentalService rentalService;
 
-    @EJB
+    @Inject
     private VehicleService vehicleService;
 
-    @EJB
+    @Inject
     private UserService userService;
+
+    @Inject
+    private FacesContext facesContext;
 
     private Rental rental;
     private List<Vehicle> allVehicles;
     private List<User> allUsers;
     private boolean editMode;
+    private Rental dbRental;
+    private boolean optimisticLockFailed;
 
     @PostConstruct
     public void init() {
@@ -104,11 +111,57 @@ public class RentalFormView implements Serializable {
         return editMode;
     }
 
+    public boolean isOptimisticLockFailed() {
+        return optimisticLockFailed;
+    }
+
+    public Rental getDbRental() {
+        return dbRental;
+    }
+
     public String save() {
-        rentalService.saveOrUpdate(rental);
-        if (rental.getVehicle() != null) {
-            return "vehicle.xhtml?faces-redirect=true&vin=" + rental.getVehicle().getVin();
+        try {
+            rentalService.saveOrUpdate(rental);
+            optimisticLockFailed = false;
+            dbRental = null;
+
+            if (rental.getVehicle() != null) {
+                return "vehicle.xhtml?faces-redirect=true&vin=" + rental.getVehicle().getVin();
+            }
+            return "vehicles.xhtml?faces-redirect=true";
+
+        } catch (EJBException e) {
+            if (isOptimisticLockException(e)) {
+                handleOptimisticLockConflict();
+                return null;
+            } else {
+                throw e;
+            }
+        } catch (OptimisticLockException e) {
+            handleOptimisticLockConflict();
+            return null;
         }
-        return "vehicles.xhtml?faces-redirect=true";
+    }
+
+    private boolean isOptimisticLockException(EJBException e) {
+        Throwable cause = e.getCause();
+        if (cause instanceof OptimisticLockException) {
+            return true;
+        }
+        return cause != null && cause.getCause() instanceof OptimisticLockException;
+    }
+
+    private void handleOptimisticLockConflict() {
+        optimisticLockFailed = true;
+        if (rental != null && rental.getId() != null) {
+            rentalService.getById(rental.getId()).ifPresent(r -> dbRental = r);
+        }
+        facesContext.addMessage(null,
+                new FacesMessage(
+                        FacesMessage.SEVERITY_ERROR,
+                        "Wypożyczenie zostało zmienione przez innego użytkownika. Twoich zmian nie zapisano. Poniżej widzisz stan w bazie oraz swoje dane.",
+                        null
+                )
+        );
     }
 }

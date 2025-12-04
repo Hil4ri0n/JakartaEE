@@ -2,8 +2,25 @@
 <ui:composition template="/WEB-INF/templates/base.xhtml"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets">
 
-    <ui:define name="title">Strona główna</ui:define>
+    <ui:define name="title">
+        #{msg['index.title']}
+    </ui:define>
 
+    <ui:define name="content">
+        <h2>#{msg['index.header']}</h2>
+        <p>#{msg['index.description']}</p>
+
+        <p>
+            <h:link outcome="vehicles"
+                    value="#{msg['index.vehiclesLink']}"/>
+        </p>
+
+        <p>
+            <h:link outcome="rental-form"
+                    value="#{msg['index.addRentalLink']}"/>
+        </p>
+    </ui:define>
 </ui:composition>

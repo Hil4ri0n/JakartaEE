@@ -5,48 +5,65 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets">
 
-    <ui:define name="title">Pojazdy</ui:define>
+    <ui:define name="title">#{msg['vehicles.title']}</ui:define>
 
     <ui:define name="content">
-        <h2>Lista pojazdów</h2>
+        <h2>#{msg['vehicles.title']}</h2>
 
         <h:panelGroup rendered="#{not empty vehicleListView.vehicles}">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>VIN</th>
-                    <th>Marka</th>
-                    <th>Model</th>
-                    <th>Stawka/dzień</th>
-                    <th>Akcje</th>
-                </tr>
-                </thead>
-                <tbody>
-                <ui:repeat value="#{vehicleListView.vehicles}" var="v">
-                    <tr>
-                        <td>#{v.vin}</td>
-                        <td>#{v.brand}</td>
-                        <td>#{v.model}</td>
-                        <td>#{v.dailyRate}</td>
-                        <td>
-                            <div class="actions">
-                                <h:link outcome="vehicle" value="Szczegóły">
-                                    <f:param name="vin" value="#{v.vin}"/>
-                                </h:link>
-                                <h:form>
-                                    <h:commandButton value="Usuń"
-                                                     action="#{vehicleListView.delete(v.vin)}"/>
-                                </h:form>
-                            </div>
-                        </td>
-                    </tr>
-                </ui:repeat>
-                </tbody>
-            </table>
+            <h:form id="listForm">
+                <!-- fragment odświeżany AJAX-em -->
+                <h:panelGroup id="vehicleList">
+                    <h:dataTable value="#{vehicleListView.vehicles}"
+                                 var="v"
+                                 styleClass="table">
+
+                        <h:column>
+                            <f:facet name="header">#{msg['vehicles.vin']}</f:facet>
+                            <h:link outcome="vehicle">
+                                <h:outputText value="#{v.vin}"/>
+                                <f:param name="vin" value="#{v.vin}"/>
+                            </h:link>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">#{msg['vehicles.brand']}</f:facet>
+                            #{v.brand}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">#{msg['vehicles.model']}</f:facet>
+                            #{v.model}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">#{msg['vehicles.dailyRate']}</f:facet>
+                            #{v.dailyRate}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">#{msg['vehicles.actions']}</f:facet>
+
+                            <h:link outcome="vehicle"
+                                    value="#{msg['vehicles.details']}">
+                                <f:param name="vin" value="#{v.vin}"/>
+                            </h:link>
+                            <!-- Usuń tylko dla admina, z potwierdzeniem i AJAX-em -->
+                            <h:commandLink value="#{msg['vehicles.delete']}"
+                                           action="#{vehicleListView.delete(v.vin)}"
+                                           rendered="#{securityView.admin}"
+                                           onclick="return confirm('#{msg['vehicles.confirmDelete']}');">
+                                <f:ajax render="vehicleList"/>
+                            </h:commandLink>
+                        </h:column>
+
+                    </h:dataTable>
+                </h:panelGroup>
+            </h:form>
         </h:panelGroup>
 
         <h:panelGroup rendered="#{empty vehicleListView.vehicles}">
-            <p>Brak pojazdów.</p>
+            <p>#{msg['vehicles.empty']}</p>
         </h:panelGroup>
     </ui:define>
 </ui:composition>

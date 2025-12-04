@@ -14,7 +14,7 @@ import java.util.List;
 @ViewScoped
 public class VehicleListView implements Serializable {
 
-    @EJB
+    @Inject
     private VehicleService vehicleService;
 
     public List<Vehicle> getVehicles() {

@@ -15,9 +15,19 @@
                   httpPort="9080"
                   httpsPort="9443" />
 
-    <application type="war"
+    <application id="CarRentalApp"
+                 type="war"
                  location="car-rental-1.0-SNAPSHOT.war"
-                 contextRoot="/car-rental" />
+                 contextRoot="/car-rental">
+        <application-bnd>
+            <security-role name="admin">
+                <group name="admin" access-id="group:jdbc/CarRentalDS/admin"/>
+            </security-role>
+            <security-role name="user">
+                <group name="user" access-id="group:jdbc/CarRentalDS/user"/>
+            </security-role>
+        </application-bnd>
+    </application>
 
     <dataSource id="CarRentalDS" jndiName="jdbc/CarRentalDS">
         <jdbcDriver javax.sql.XADataSource="org.h2.jdbcx.JdbcDataSource"

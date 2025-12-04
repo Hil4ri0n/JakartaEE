@@ -5,7 +5,6 @@ import com.hil4ri0n.carrental.model.Vehicle;
 import com.hil4ri0n.carrental.service.RentalService;
 import com.hil4ri0n.carrental.service.VehicleService;
 import jakarta.annotation.PostConstruct;
-import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -20,10 +19,10 @@ import java.util.UUID;
 @ViewScoped
 public class VehicleDetailView implements Serializable {
 
-    @EJB
+    @Inject
     private VehicleService vehicleService;
 
-    @EJB
+    @Inject
     private RentalService rentalService;
 
     private String vin;
@@ -33,18 +32,28 @@ public class VehicleDetailView implements Serializable {
     @PostConstruct
     public void init() {
         vin = FacesContext.getCurrentInstance()
-                .getExternalContext().getRequestParameterMap().get("vin");
-        if (vin != null) {
+                .getExternalContext()
+                .getRequestParameterMap()
+                .get("vin");
+
+        if (vin != null && !vin.isEmpty()) {
             Optional<Vehicle> opt = vehicleService.getByVin(vin);
             opt.ifPresent(v -> {
                 vehicle = v;
                 refreshRentals();
             });
+        } else {
+            rentals = List.of();
         }
     }
 
     private void refreshRentals() {
-        rentals = vehicle.getRentals();
+        if (vehicle != null && vehicle.getVin() != null) {
+            // ważne: korzystamy z serwisu, który respektuje role i zalogowanego użytkownika
+            rentals = rentalService.getByVehicleVin(vehicle.getVin());
+        } else {
+            rentals = List.of();
+        }
     }
 
     public Vehicle getVehicle() {

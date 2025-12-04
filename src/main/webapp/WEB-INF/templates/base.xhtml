@@ -3,31 +3,61 @@
       xmlns:h="jakarta.faces.html"
       xmlns:ui="jakarta.faces.facelets">
 <h:head>
-    <title><ui:insert name="title">CarRental</ui:insert></title>
+    <title>
+        <ui:insert name="title">#{msg['app.title']}</ui:insert>
+    </title>
+    <!-- u Ciebie plik nazywa się style.css, zostawiamy to -->
     <h:outputStylesheet library="css" name="style.css"/>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </h:head>
 <h:body>
     <div class="layout">
+
+        <!-- górny pasek z informacją o zalogowanym użytkowniku -->
+        <div class="topbar">
+            #{msg['app.title']}
+            <span style="float:right">
+                <h:panelGroup rendered="#{securityView.loggedIn}">
+                    #{msg['header.loggedIn']} #{securityView.username}
+                </h:panelGroup>
+                <h:panelGroup rendered="#{!securityView.loggedIn}">
+                    #{msg['header.anonymous']}
+                </h:panelGroup>
+            </span>
+        </div>
+
+        <!-- nagłówek z dynamicznym obrazkiem -->
         <header class="header">
-            <h1><ui:insert name="headerTitle">Wypożyczalnia samochodów</ui:insert></h1>
+            <h:graphicImage value="#{resource[securityView.headerImage]}"
+                            styleClass="header-img"/>
+
+            <h1>
+                <ui:insert name="headerTitle">
+                    #{msg['header.title']}
+                </ui:insert>
+            </h1>
         </header>
 
+        <!-- menu nawigacyjne -->
         <nav class="nav">
-            <h:link outcome="index" value="Strona główna"/>
-            <h:link outcome="vehicles" value="Pojazdy"/>
-            <h:link outcome="/rental-form" value="Nowy wynajem"/>
+            <h:link outcome="index" value="#{msg['nav.home']}"/>
+            <h:link outcome="vehicles" value="#{msg['nav.vehicles']}"/>
+            <h:link outcome="/rental-form" value="#{msg['nav.addRental']}"/>
         </nav>
 
+        <!-- główna zawartość -->
         <main class="container">
             <div class="card">
                 <ui:insert name="content"/>
             </div>
         </main>
 
+        <!-- stopka -->
         <footer class="footer">
-            <ui:insert name="footer">© #{request.serverName} · #{request.contextPath} · #{request.locale.displayName}</ui:insert>
+            <ui:insert name="footer">
+                #{msg['footer.text']}
+            </ui:insert>
         </footer>
     </div>
 </h:body>

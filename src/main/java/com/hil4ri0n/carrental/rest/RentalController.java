@@ -10,6 +10,7 @@ import com.hil4ri0n.carrental.service.VehicleService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 
@@ -24,13 +25,13 @@ import java.util.UUID;
 @RequestScoped
 public class RentalController {
 
-    @EJB
+    @Inject
     RentalService rentalService;
 
-    @EJB
+    @Inject
     VehicleService vehicleService;
 
-    @EJB
+    @Inject
     UserService userService;
 
     @Context
